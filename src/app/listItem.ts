@@ -1,0 +1,1 @@
+export class ListItem {    id: number;    name: string;    theme: string;    views: number;    date: string;}
