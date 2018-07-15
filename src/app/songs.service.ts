@@ -16,10 +16,10 @@ const httpOptions = {
 })
 export class SongsService {
 
-    // private url = 'https://j-serv-s.herokuapp.com';
+    private url = 'https://j-serv-s.herokuapp.com';
     private songsUrl = '/Songs';
     private themeUrl = '/Themes';
-    private url = 'http://localhost:3000';
+    // private url = 'http://localhost:3000';
 
     constructor(
         private http: HttpClient,
