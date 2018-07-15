@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ListComponent } from './list/list.component';
 import { AdminComponent } from './admin/admin.component';
+import { AuthGuard } from './Auth';
 
 const routes: Routes = [
-    { path: '', component: ListComponent },
-    { path: 'admin', component: AdminComponent }
+    { path: '', loadChildren: './list/list.component#ListComponent' }
+    // { path: 'admin', component: AdminComponent, canActivate: AuthGuard }
 ];
 
 @NgModule({
