@@ -1,3 +1,35 @@
-<p style="text-align: center">
-  admin works!
-</p>
+<div class="container">
+    <button (click)="logOut()" class="logout">LogOut</button>
+
+    <button (click)="edit = !edit; add = false;" class="addButton">Edit</button>
+    <button (click)="add = !add; edit = false;" class="addButton">Add</button>
+
+    <div *ngIf="add" class="add">
+        <input type="number" #number id="number" placeholder="Number">
+
+        <input type="text" #title id="title" placeholder="Title">
+
+        <label for="theme">Theme</label>
+        <select id="theme" #theme>
+            <option *ngFor="let theme of themes">{{theme}}</option>
+        </select>
+
+        <input type="date" id="date" #date placeholder="DD.MM.YYYY">
+
+        <button id="add-button" (click)="addSong(number.value, title.value, theme.selectedOptions.item(0).text, date.value)">Add</button>
+    </div>
+
+    <div *ngIf="edit" class="edit">
+        <div *ngFor="let song of songs" class="song-list">
+            <input type="text" value=" ID number: {{song.id}}" disabled>
+            <input #id type="number" value="{{song.id}}" hidden style="display: none">
+            <input #views type="number" value="{{song.views}}" hidden style="display: none">
+            <input #title type="text" value="{{song.name}}">
+            <select #theme>
+                <option *ngFor="let theme of themes" [selected]="theme===song.theme">{{theme}}</option>
+            </select>
+            <input #date type="date" value="{{song.date}}">
+            <button (click)="editSong(id.value, title.value, theme.selectedOptions.item(0).text, date.value, views.value)">Save</button>
+        </div>
+    </div>
+</div>
