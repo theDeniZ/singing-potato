@@ -6,11 +6,13 @@ import { AppRoutingModule } from './/app-routing.module';
 
 import { HttpClientModule } from '@angular/common/http';
 import { ListComponent } from './list/list.component';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ListComponent
+    ListComponent,
+    AdminComponent
   ],
   imports: [
     HttpClientModule,
