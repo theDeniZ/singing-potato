@@ -20,11 +20,11 @@
       </tr></thead>
       <tbody>
       <tr *ngFor="let song of songs">
-        <td>{{song.id}}</td>
+        <td>{{song.number}}</td>
         <td>{{song.name}}</td>
-        <td>{{song.theme}}</td>
+        <td>{{song.theme.name}}</td>
         <td>{{song.views}}</td>
-        <td>{{song.date}}</td>
+        <td>{{song.date.slice(0,10)}}</td>
         <td></td>
       </tr>
       </tbody>

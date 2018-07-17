@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import {SongsService} from '../songs.service';
 import {ListItem, Theme} from '../listItem';
-import {strictEqual} from 'assert';
 
 @Component({
     selector: 'app-admin',
@@ -42,20 +41,15 @@ export class AdminComponent implements OnInit {
     }
 
     getThemes() {
-        this.songService.getThemes().subscribe(t => {
-            this.themes = t;
-            if (t.length) {
-                let c = t[0].id;
-                let i = 1;
-                while (i < t.length) {
-                    if (t[i].id > c) {
-                        c = t[i].id;
-                    }
-                    i++;
-                }
-                Theme.count = c;
+        this.songService.getThemes().subscribe(t => this.themes = t, error2 => this.log(error2.message));
+    }
+
+    private getTheme(id: string): Theme {
+        for (let t of this.themes) {
+            if (t._id == id) {
+                return t;
             }
-        });
+        }
     }
 
     private log(message: string) {
@@ -67,19 +61,12 @@ export class AdminComponent implements OnInit {
         this.route.navigate(['/login']);
     }
 
-    addSong(num: number, tit: string, th: string, dat: string) {
-        let i = 0;
-        while (i < this.songs.length) {
-            if (this.songs[i].id == num) {
-                this.log('song with id ' + num + ' already exist');
-                return;
-            }
-            ++i;
-        }
+    addSong(num: number, tit: string, thId: string, dat: string) {
         const song: ListItem = {
-            id: num,
+            _id: '',
+            number: num,
             name: tit,
-            theme: th,
+            theme: this.getTheme(thId),
             date: dat,
             views: 0
         };
@@ -91,22 +78,22 @@ export class AdminComponent implements OnInit {
             );
     }
 
-    editSong(num: number, tit: string, th: string, dat: string, v: number) {
+    editSong(id: string, n: number, tit: string, thId: string, dat: string, v: number) {
         const song: ListItem = {
-            id: num,
+            _id: id,
+            number: n,
             name: tit,
-            theme: th,
+            theme: this.getTheme(thId),
             date: dat,
             views: v
         };
-
         this.songService.editSong(song).subscribe(arrived => this.songs[this.songs.indexOf(song)] = arrived, null, () => this.log('saved'));
     }
 
-    deleteSong(id: number) {
+    deleteSong(id: string) {
         this.songService.deleteSong(id).subscribe();
         for (let i = 0; i < this.songs.length; ++i) {
-            if (this.songs[i].id === id) {
+            if (this.songs[i]._id === id) {
                 delete this.songs[i];
                 break;
             }
@@ -133,28 +120,33 @@ export class AdminComponent implements OnInit {
             );
     }
 
-    editTheme(num: number, tit: string) {
+    editTheme(num: string, tit: string) {
         if (!tit.length) {
             this.deleteTheme(num);
             return;
         }
-        let theme: Theme = {
-            id: num,
-            name: tit
-        };
+        let theme: Theme = null;
+        let i = -1;
+        while (!theme && i < this.themes.length) {
+            ++i;
+            if (this.themes[i]._id == num) {
+                theme = this.themes[i];
+            }
+        }
+        theme.name = tit;
 
         this.songService.editTheme(theme).subscribe(
-            arrived => this.themes[this.themes.indexOf(theme)] = arrived,
+            arrived => this.themes[i] = arrived,
             null,
             () => this.log('saved')
         );
     }
 
-    deleteTheme(id: number) {
+    deleteTheme(id: string) {
         this.songService.deleteTheme(id).subscribe();
         this.log('deleted');
         for (let i = 0; i < this.themes.length; ++i) {
-            if (this.themes[i].id === id) {
+            if (this.themes[i]._id == id) {
                 delete this.themes[i];
                 break;
             }

@@ -1,1 +1,1 @@
-export class ListItem {    id: number;    name: string;    theme: string;    views: number;    date: string;}export class Theme {    static count = 0;    id: number;    name: string;    constructor(m: string) {        this.id = ++Theme.count;        this.name = m;    }}
+export class ListItem {    _id: string;    number: number;    name: string;    theme: Theme;    views: number;    date: string;}export class Theme {    _id: string;    name: string;    __v: number;    constructor(m: string) {        this.name = m;    }}

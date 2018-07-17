@@ -12,27 +12,28 @@
 
         <!--<label for="theme">Theme</label>-->
         <select id="theme" #theme>
-            <option *ngFor="let theme of themes">{{theme.name}}</option>
+            <option *ngFor="let theme of themes" value="{{theme._id}}">{{theme.name}}</option>
         </select>
 
-        <input type="date" id="date" #date placeholder="DD.MM.YYYY">
+        <input type="date" id="date" #date placeholder="!!! YYYY-MM-DD !!!">
 
-        <button class="add-button" (click)="addSong(number.value, title.value, theme.selectedOptions.item(0).text, date.value)">Add</button>
+        <button class="add-button" (click)="addSong(number.value, title.value, theme.selectedOptions.item(0).value, date.value)">Add</button>
     </div>
 
     <div *ngIf="edit" class="edit content">
         <div *ngFor="let song of songs" class="song-list">
-            <div *ngIf="song.id">
-            <input type="text" value=" ID number: {{song.id}}" disabled>
-            <input #id type="number" value="{{song.id}}" hidden style="display: none">
+            <div *ngIf="song._id">
+            <input type="text" value=" ID number: {{song.number}}. see below to edit" disabled class="edit-head">
+            <input #num type="text" value="{{song.number}}">
+            <input #id type="text" value="{{song._id}}" hidden style="display: none">
             <input #views type="number" value="{{song.views}}" hidden style="display: none">
             <input #title type="text" value="{{song.name}}">
             <select #theme>
                 <option></option>
-                <option *ngFor="let theme of themes" [selected]="theme.name == song.theme">{{theme.name}}</option>
+                <option *ngFor="let theme of themes" [selected]="theme._id === song.theme._id" value="{{theme._id}}">{{theme.name}}</option>
             </select>
-            <input #date type="date" value="{{song.date}}">
-            <button class="add-button save"  (click)="editSong(id.value, title.value, theme.selectedOptions.item(0).text, date.value, views.value)">Save</button>
+            <input #date type="text" value="{{song.date}}">
+            <button class="add-button save"  (click)="editSong(id.value, num.value, title.value, theme.selectedOptions.item(0).value, date.value, views.value)">Save</button>
             <button class="add-button delete"  (click)="deleteSong(id.value)">Delete song</button>
             </div>
         </div>
@@ -41,7 +42,7 @@
     <div *ngIf="theme" class="add content">
         <div *ngFor="let thm of themes" >
             <div *ngIf="thm.name.length">
-                <input #id type="number" value="{{thm.id}}" hidden style="display: none">
+                <input #id type="text" value="{{thm._id}}" hidden style="display: none">
                 <input #title type="text" value="{{thm.name}}" (keyup.enter)="editTheme(id.value, title.value)">
             </div>
         </div>

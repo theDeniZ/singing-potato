@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ListItem, Theme } from './listItem';
 import {MessageService} from './message.service';
+import {catchError, tap} from 'rxjs/internal/operators';
 
 const httpOptions = {
     headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        'Authorization': 'my-auth-token'
+        // 'Content-Type':  'application/json',
+        // 'Authorization': 'my-auth-token'
+        'Content-Type': 'application/x-www-form-urlencoded'
     })
 };
 
@@ -16,14 +18,14 @@ const httpOptions = {
 })
 export class SongsService {
 
-    private url = 'https://j-serv-s.herokuapp.com';
-    private songsUrl = '/Songs';
-    private themeUrl = '/Themes';
-    // private url = 'http://localhost:3000';
+    private url = 'https://j-serv-s.herokuapp.com/';
+    // private url = 'http://localhost:3000/';
+    private songsUrl = 'songs/';
+    private themeUrl = 'themes/';
 
     constructor(
         private http: HttpClient,
-                private messageService: MessageService
+        private messageService: MessageService
     ) { }
 
     log(message: string) {
@@ -35,15 +37,25 @@ export class SongsService {
     }
 
     addSong(song: ListItem): Observable<ListItem> {
-        return this.http.post<ListItem>(this.url + this.songsUrl, song, httpOptions);
+        let body = new HttpParams();
+        body = body.set('name', song.name);
+        body = body.set('number', song.number.toString());
+        body = body.set('date', song.date);
+        body = body.set('themeId', song.theme._id);
+        return this.http.post<ListItem>(this.url + this.songsUrl, body, httpOptions);
     }
 
     editSong(song: ListItem): Observable<ListItem> {
-        return this.http.put<ListItem>(this.url + this.songsUrl + '/' + song.id, song, httpOptions);
+        let body = new HttpParams();
+        body = body.set('name', song.name);
+        body = body.set('number', song.number.toString());
+        body = body.set('date', song.date);
+        body = body.set('themeId', song.theme._id);
+        return this.http.put<ListItem>(this.url + this.songsUrl + song._id, body, httpOptions);
     }
 
-    deleteSong(id: number): Observable<{}> {
-        return this.http.delete(this.url + this.songsUrl + '/' + id);
+    deleteSong(id: string): Observable<{}> {
+        return this.http.delete(this.url + this.songsUrl + id);
     }
 
     getThemes(): Observable<Theme[]> {
@@ -51,15 +63,19 @@ export class SongsService {
     }
 
     addTheme(theme: Theme): Observable<Theme> {
-        return this.http.post<Theme>(this.url + this.themeUrl, theme, httpOptions);
+        let body = new HttpParams();
+        body = body.set('name', theme.name);
+        return this.http.post<Theme>(this.url + this.themeUrl, body, httpOptions);
     }
 
     editTheme(theme: Theme): Observable<Theme> {
-        return this.http.put<Theme>(this.url + this.themeUrl + '/' + theme.id, theme, httpOptions);
+        let body = new HttpParams();
+        body = body.set('name', theme.name);
+        return this.http.put<Theme>(this.url + this.themeUrl + theme._id, body, httpOptions);
     }
 
-    deleteTheme(id: number): Observable<{}> {
-        return this.http.delete(this.url + this.themeUrl + '/' + id);
+    deleteTheme(id: string): Observable<{}> {
+        return this.http.delete(this.url + this.themeUrl + id);
     }
 
 }

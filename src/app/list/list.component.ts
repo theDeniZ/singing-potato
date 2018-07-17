@@ -17,8 +17,12 @@ export class ListComponent implements OnInit {
         this.getSongs();
     }
 
+    log(message: string) {
+        this.songService.log(message);
+    }
+
     getSongs() {
-        this.songService.getSongs().subscribe(songs => this.songs = songs, null, () => { this.loadScript(); });
+        this.songService.getSongs().subscribe(songs => this.songs = songs, error2 => this.log(error2), () => { this.loadScript(); });
     }
 
     eraseScript() {
