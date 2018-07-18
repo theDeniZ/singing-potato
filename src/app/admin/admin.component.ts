@@ -18,6 +18,7 @@ export class AdminComponent implements OnInit {
 
     themes: Theme[] = [];
     songs: ListItem[] = [];
+    displayedSongs: ListItem[];
 
     constructor(
         private route: Router,
@@ -37,11 +38,27 @@ export class AdminComponent implements OnInit {
     }
 
     getSongs() {
-        this.songService.getSongs().subscribe(s => this.songs = s);
+        this.songService.getSongs().subscribe(
+            s => {
+                this.songs = s.sort(
+                    (a, b) => {
+                        return a.number - b.number;
+                    });
+                this.displayedSongs = this.songs;
+        });
     }
 
     getThemes() {
         this.songService.getThemes().subscribe(t => this.themes = t, error2 => this.log(error2.message));
+    }
+
+    doSearch(str: string) {
+        str = str.toLowerCase();
+        this.displayedSongs = this.songs.filter(
+            (item, num, arr) => {
+                return item.number.toString().includes(str) || item.name.toLowerCase().includes(str)
+            }
+        );
     }
 
     private getTheme(id: string): Theme {
@@ -67,7 +84,7 @@ export class AdminComponent implements OnInit {
             number: num,
             name: tit,
             theme: this.getTheme(thId),
-            date: dat,
+            date: dat.length > 0 ? dat : null,
             views: 0
         };
 
@@ -75,7 +92,7 @@ export class AdminComponent implements OnInit {
             arrived => this.songs.push(arrived),
             null,
             () => {this.log('added'); this.add = false; this.edit = true; this.theme = false; }
-            );
+        );
     }
 
     editSong(id: string, n: number, tit: string, thId: string, dat: string, v: number) {
@@ -87,7 +104,11 @@ export class AdminComponent implements OnInit {
             date: dat,
             views: v
         };
-        this.songService.editSong(song).subscribe(arrived => this.songs[this.songs.indexOf(song)] = arrived, null, () => this.log('saved'));
+        this.songService.editSong(song).subscribe(
+            arrived => this.songs[this.songs.indexOf(song)] = arrived,
+            null,
+            () => this.log('saved')
+        );
     }
 
     deleteSong(id: string) {
@@ -95,6 +116,12 @@ export class AdminComponent implements OnInit {
         for (let i = 0; i < this.songs.length; ++i) {
             if (this.songs[i]._id === id) {
                 delete this.songs[i];
+                break;
+            }
+        }
+        for (let i = 0; i < this.displayedSongs.length; ++i) {
+            if (this.displayedSongs[i]._id === id) {
+                delete this.displayedSongs[i];
                 break;
             }
         }
@@ -117,7 +144,7 @@ export class AdminComponent implements OnInit {
             arrived => this.themes.push(arrived),
             null,
             () => {this.log('added'); this.newTheme = false; }
-            );
+        );
     }
 
     editTheme(num: string, tit: string) {

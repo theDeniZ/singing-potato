@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ListItem, Theme } from './listItem';
+import { ListItem, Theme, Lyrics } from './listItem';
 import {MessageService} from './message.service';
 import {catchError, tap} from 'rxjs/internal/operators';
 
 const httpOptions = {
     headers: new HttpHeaders({
-        // 'Content-Type':  'application/json',
-        // 'Authorization': 'my-auth-token'
         'Content-Type': 'application/x-www-form-urlencoded'
     })
 };
@@ -22,6 +20,7 @@ export class SongsService {
     // private url = 'http://localhost:3000/';
     private songsUrl = 'songs/';
     private themeUrl = 'themes/';
+    private lyricsUrl = 'lyrics/';
 
     constructor(
         private http: HttpClient,
@@ -33,14 +32,20 @@ export class SongsService {
     }
 
     getSongs(): Observable<ListItem[]> {
-        return this.http.get<ListItem[]>(this.url + this.songsUrl);
+        return this.http.get<ListItem[]>(this.url + this.songsUrl, httpOptions);
+    }
+
+    getSong(id: string): Observable<ListItem> {
+        return this.http.get<ListItem>(this.url + this.songsUrl + id, httpOptions);
     }
 
     addSong(song: ListItem): Observable<ListItem> {
         let body = new HttpParams();
         body = body.set('name', song.name);
         body = body.set('number', song.number.toString());
-        body = body.set('date', song.date);
+        if (song.date) {
+            body = body.set('date', song.date);
+        }
         body = body.set('themeId', song.theme._id);
         return this.http.post<ListItem>(this.url + this.songsUrl, body, httpOptions);
     }
@@ -55,11 +60,17 @@ export class SongsService {
     }
 
     deleteSong(id: string): Observable<{}> {
-        return this.http.delete(this.url + this.songsUrl + id);
+        return this.http.delete(this.url + this.songsUrl + id, httpOptions);
     }
 
+    //themes
+
     getThemes(): Observable<Theme[]> {
-        return this.http.get<Theme[]>(this.url + this.themeUrl);
+        return this.http.get<Theme[]>(this.url + this.themeUrl, httpOptions);
+    }
+
+    getTheme(id: string): Observable<Theme> {
+        return this.http.get<Theme>(this.url + this.themeUrl + id, httpOptions);
     }
 
     addTheme(theme: Theme): Observable<Theme> {
@@ -75,7 +86,36 @@ export class SongsService {
     }
 
     deleteTheme(id: string): Observable<{}> {
-        return this.http.delete(this.url + this.themeUrl + id);
+        return this.http.delete(this.url + this.themeUrl + id, httpOptions);
     }
+
+    // lyrics
+
+    getLyrics(): Observable<Lyrics[]> {
+        return this.http.get<Lyrics[]>(this.url + this.lyricsUrl, httpOptions);
+    }
+
+    getLyric(id: string): Observable<Lyrics> {
+        return this.http.get<Lyrics>(this.url + this.lyricsUrl + id, httpOptions);
+    }
+
+    addLyrics(lyrics: Lyrics): Observable<Lyrics> {
+        let body = new HttpParams();
+        body = body.set('songId', lyrics.songId);
+        body = body.set('lyrics', lyrics.lyrics);
+        return this.http.post<Lyrics>(this.url + this.lyricsUrl, body, httpOptions);
+    }
+
+    editLyrics(lyrics: Lyrics): Observable<Lyrics> {
+        let body = new HttpParams();
+        body = body.set('songId', lyrics.songId);
+        body = body.set('lyrics', lyrics.lyrics);
+        return this.http.put<Lyrics>(this.url + this.lyricsUrl + lyrics.songId, body, httpOptions);
+    }
+
+    deleteLyrics(id: string): Observable<{}> {
+        return this.http.delete(this.url + this.lyricsUrl + id, httpOptions);
+    }
+
 
 }

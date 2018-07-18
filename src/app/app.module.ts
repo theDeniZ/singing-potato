@@ -9,6 +9,8 @@ import { ListComponent } from './list/list.component';
 import { AdminComponent } from './admin/admin.component';
 import { LoginComponent } from './login/login.component';
 import { MessagesComponent } from './messages/messages.component';
+import { AdminLyricsComponent } from './admin-lyrics/admin-lyrics.component';
+import { LyricsComponent } from './lyrics/lyrics.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { MessagesComponent } from './messages/messages.component';
     ListComponent,
     AdminComponent,
     LoginComponent,
-    MessagesComponent
+    MessagesComponent,
+    AdminLyricsComponent,
+    LyricsComponent
   ],
   imports: [
     HttpClientModule,

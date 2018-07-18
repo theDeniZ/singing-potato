@@ -1,0 +1,14 @@
+<div class="green-back"></div>
+<div class="add header">
+    <button routerLink="/admin" class="addButton" >Back</button>
+</div>
+
+<div class="space"></div>
+<div class=" half content">
+    <input type="text" value="Song #{{song.number}}. '{{song.name}}'" class="edit-head" disabled>
+    <br>
+    <textarea #tex (keyup)="lyr = tex.value">{{lyr}}</textarea>
+    <button *ngIf="lyrics" class="addButton" (click)="edit()">Save</button>
+    <button *ngIf="!lyrics" class="addButton" (click)="add()">Add</button>
+    <button class="addButton delete" (click)="delete()">Delete</button>
+</div>

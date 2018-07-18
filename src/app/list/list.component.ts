@@ -22,7 +22,7 @@ export class ListComponent implements OnInit {
     }
 
     getSongs() {
-        this.songService.getSongs().subscribe(songs => this.songs = songs, error2 => this.log(error2), () => { this.loadScript(); });
+        this.songService.getSongs().subscribe(songs => this.songs = songs.sort((a, b) => { return a.number - b.number; } ), error2 => this.log(error2), () => { this.loadScript(); });
     }
 
     eraseScript() {

@@ -12,10 +12,10 @@ $().ready(function(){
     $table.bootstrapTable({
         toolbar: ".toolbar",
 
-        showRefresh: true,
+        showRefresh: false,
         search: true,
-        showToggle: true,
-        showColumns: true,
+        showToggle: false,
+        showColumns: false,
         pagination: true,
         striped: true,
         sortable: true,

@@ -1,11 +1,15 @@
 <div class="container">
-    <button (click)="logOut()" class="logout">LogOut</button>
-    <div class="add content">
+    <!--here-->
+    <div class="green-back"></div>
+    <div class="add header">
         <button (click)="add = true; edit = false;  theme = false;" class="addButton">Add</button>
-        <button (click)="edit = true; add = false; theme = false;" class="addButton ">Edit</button>
-        <button (click)="add = false; edit = false; theme = true;" class="addButton themes">Themes</button>
+        <button (click)="edit = true; add = false; theme = false;" class="addButton">Edit</button>
+        <button (click)="add = false; edit = false; theme = true;" class="addButton">Themes</button>
+        <button (click)="logOut()" class="addButton logout">LogOut</button>
+        <input #search type="text" placeholder="Search" class="search" (keyup)="doSearch(search.value)">
     </div>
-    <div *ngIf="add" class="add content">
+    <div class="space"></div>
+    <div *ngIf="add" class="half content">
         <input type="number" #number id="number" placeholder="Number">
 
         <input type="text" #title id="title" placeholder="Title">
@@ -21,7 +25,7 @@
     </div>
 
     <div *ngIf="edit" class="edit content">
-        <div *ngFor="let song of songs" class="song-list">
+        <div *ngFor="let song of displayedSongs" class="song-list">
             <div *ngIf="song._id">
             <input type="text" value=" ID number: {{song.number}}. see below to edit" disabled class="edit-head">
             <input #num type="text" value="{{song.number}}">
@@ -33,13 +37,14 @@
                 <option *ngFor="let theme of themes" [selected]="theme._id === song.theme._id" value="{{theme._id}}">{{theme.name}}</option>
             </select>
             <input #date type="text" value="{{song.date}}">
-            <button class="add-button save"  (click)="editSong(id.value, num.value, title.value, theme.selectedOptions.item(0).value, date.value, views.value)">Save</button>
-            <button class="add-button delete"  (click)="deleteSong(id.value)">Delete song</button>
+            <button class="add-button triple"  (click)="editSong(id.value, num.value, title.value, theme.selectedOptions.item(0).value, date.value, views.value)">Save</button>
+                <button class="add-button triple editt" routerLink="/admin/{{song._id}}" >Lyrics</button>
+            <button class="add-button triple delete"  (click)="deleteSong(id.value)">Delete song</button>
             </div>
         </div>
     </div>
 
-    <div *ngIf="theme" class="add content">
+    <div *ngIf="theme" class="half content">
         <div *ngFor="let thm of themes" >
             <div *ngIf="thm.name.length">
                 <input #id type="text" value="{{thm._id}}" hidden style="display: none">
