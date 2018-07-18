@@ -19,17 +19,20 @@
       <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
       </tr></thead>
       <tbody>
-      <tr *ngFor="let song of songs" >
+      <div *ngFor="let song of songs" >
+      <tr onclick="alert(2)">
         <td>{{song.number}}</td>
-        <td onclick="alert(2)">{{song.name}}</td>
+        <td>{{song.name}}</td>
         <td>{{song.theme.name}}</td>
         <td>{{song.views}}</td>
         <td>{{song.date.slice(0,10)}}</td>
         <td></td>
       </tr>
+      </div>
       </tbody>
     </table>
   </div>
+  <button routerLink="/song/5b4e0b76bc7dc3276a83f848">song</button>
 
 </div>
 

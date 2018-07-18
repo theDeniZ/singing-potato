@@ -66,6 +66,12 @@ $().ready(function(){
     });
 });
 
+$(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    });
+});
+
 
 function operateFormatter(value, row, index) {
     return [

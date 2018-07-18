@@ -2,6 +2,7 @@
     <!--here-->
     <div class="green-back"></div>
     <div class="add header">
+        <button routerLink="/" class="addButton">Back</button>
         <button (click)="add = true; edit = false;  theme = false;" class="addButton">Add</button>
         <button (click)="edit = true; add = false; theme = false;" class="addButton">Edit</button>
         <button (click)="add = false; edit = false; theme = true;" class="addButton">Themes</button>
@@ -33,7 +34,6 @@
             <input #views type="number" value="{{song.views}}" hidden style="display: none">
             <input #title type="text" value="{{song.name}}">
             <select #theme>
-                <option></option>
                 <option *ngFor="let theme of themes" [selected]="theme._id === song.theme._id" value="{{theme._id}}">{{theme.name}}</option>
             </select>
             <input #date type="text" value="{{song.date}}">

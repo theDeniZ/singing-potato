@@ -48,4 +48,8 @@ export class ListComponent implements OnInit {
 
     }
 
+    goTo(song: ListItem) {
+        this.log('goto');
+    }
+
 }
