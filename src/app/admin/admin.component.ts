@@ -18,7 +18,7 @@ export class AdminComponent implements OnInit {
 
     themes: Theme[] = [];
     songs: ListItem[] = [];
-    displayedSongs: ListItem[];
+
 
     constructor(
         private route: Router,
@@ -44,7 +44,6 @@ export class AdminComponent implements OnInit {
                     (a, b) => {
                         return a.number - b.number;
                     });
-                this.displayedSongs = this.songs;
         });
     }
 
@@ -52,14 +51,7 @@ export class AdminComponent implements OnInit {
         this.songService.getThemes().subscribe(t => this.themes = t, error2 => this.log(error2.message));
     }
 
-    doSearch(str: string) {
-        str = str.toLowerCase();
-        this.displayedSongs = this.songs.filter(
-            (item, num, arr) => {
-                return item.number.toString().includes(str) || item.name.toLowerCase().includes(str);
-            }
-        );
-    }
+
 
     private getTheme(id: string): Theme {
         for (let t of this.themes) {
@@ -119,12 +111,7 @@ export class AdminComponent implements OnInit {
                 break;
             }
         }
-        for (let i = 0; i < this.displayedSongs.length; ++i) {
-            if (this.displayedSongs[i]._id === id) {
-                delete this.displayedSongs[i];
-                break;
-            }
-        }
+
     }
 
 
