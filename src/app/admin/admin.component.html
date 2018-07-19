@@ -1,12 +1,14 @@
 <div class="container">
     <!--here-->
 
-    <div class="add header">
+    <div class="background"></div>
+    <div class="header">
         <button routerLink="/" class="addButton">Back</button>
         <button (click)="add = true; edit = false;  theme = false;" class="addButton">Add</button>
         <button (click)="edit = true; add = false; theme = false;" class="addButton">Edit</button>
         <button (click)="add = false; edit = false; theme = true;" class="addButton">Themes</button>
         <button (click)="logOut()" class="addButton logout">LogOut</button>
+        <input #search type="text" placeholder="Search" class="search" (keyup)="doSearch(search.value)">
     </div>
     <div class="space"></div>
     <div *ngIf="add" class="half content">
@@ -25,7 +27,7 @@
     </div>
 
     <div *ngIf="edit" class="edit content">
-        <div *ngFor="let song of songs" class="song-list">
+        <div *ngFor="let song of displayedSongs" class="song-list">
             <div *ngIf="song._id">
             <input type="text" value=" ID number: {{song.number}}. see below to edit" disabled class="edit-head">
             <input #num type="text" value="{{song.number}}">
