@@ -35,7 +35,7 @@ export class AdminLyricsComponent implements OnInit {
 
     edit() {
         this.lyrics.lyrics = this.lyr;
-        this.songService.editLyrics(this.lyrics).subscribe(this.lyricsHandler, null, () => this.log('saved'));
+        this.songService.editLyrics(this.lyrics).subscribe(this.lyricsHandler, null, () => {this.log('saved'); this.router.navigate(['/admin'])});
     }
 
     add() {

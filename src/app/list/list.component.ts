@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ListItem } from '../listItem';
 import {SongsService} from '../songs.service';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-list',
@@ -11,7 +12,10 @@ export class ListComponent implements OnInit {
 
     songs: ListItem[];
 
-    constructor(private songService: SongsService) { }
+    constructor(
+        private songService: SongsService,
+        private router: Router
+    ) { }
 
     ngOnInit() {
         this.getSongs();
@@ -22,20 +26,29 @@ export class ListComponent implements OnInit {
     }
 
     getSongs() {
-        this.songService.getSongs().subscribe(songs => this.songs = songs.sort((a, b) => { return a.number - b.number; } ), error2 => this.log(error2), () => { this.loadScript(); });
+        this.songService.getSongs().subscribe(
+            songs => {
+                    this.songs = songs.sort(
+                      (a, b) => {
+                            return a.number - b.number;
+                        });
+                },
+            error2 => this.log(error2),
+            () => { this.loadScript(); }
+    );
     }
-
-    eraseScript() {
-        const scripts = document.getElementsByTagName('script');
-        for (let i = 0; i < scripts.length; ++i) {
-            if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes('list')) {
-                scripts[i].remove();
-            }
-        }
-    }
+    //
+    // eraseScript() {
+    //     const scripts = document.getElementsByTagName('script');
+    //     for (let i = 0; i < scripts.length; ++i) {
+    //         if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes('list')) {
+    //             scripts[i].remove();
+    //         }
+    //     }
+    // }
 
     loadScript() {
-        const dynamicScripts = ['jquery-1.11.2.min.js', 'bootstrap-table.js', 'list.js'];
+        const dynamicScripts = ['jquery-1.11.2.min.js', 'bootstrap-table.js', 'list.js', 'jasny-bootstrap.js'];
 
         for (let i = 0; i < dynamicScripts .length; i++) {
             const node = document.createElement('script');
@@ -48,8 +61,8 @@ export class ListComponent implements OnInit {
 
     }
 
-    goTo(song: ListItem) {
-        this.log('goto');
+    goTo(song: string) {
+        this.router.navigate(['/song/' + song]);
     }
 
 }

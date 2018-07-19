@@ -56,7 +56,7 @@ export class AdminComponent implements OnInit {
         str = str.toLowerCase();
         this.displayedSongs = this.songs.filter(
             (item, num, arr) => {
-                return item.number.toString().includes(str) || item.name.toLowerCase().includes(str)
+                return item.number.toString().includes(str) || item.name.toLowerCase().includes(str);
             }
         );
     }

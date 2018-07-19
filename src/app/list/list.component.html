@@ -1,45 +1,42 @@
 
 <div class="wrapper">
-  <div class="fresh-table full-color-orange full-screen-table">
-    <!--    Available colors for the full background: full-color-blue, full-color-azure, full-color-green, full-color-red, full-color-orange
-            Available colors only for the toolbar: toolbar-color-blue, toolbar-color-azure, toolbar-color-green, toolbar-color-red, toolbar-color-orange
-    -->
+    <div class="fresh-table full-color-orange full-screen-table">
+        <!--    Available colors for the full background: full-color-blue, full-color-azure, full-color-green, full-color-red, full-color-orange
+                Available colors only for the toolbar: toolbar-color-blue, toolbar-color-azure, toolbar-color-green, toolbar-color-red, toolbar-color-orange
+        -->
 
-    <div class="toolbar">
-      <button routerLink="/admin" class="btn btn-default">ADMIN</button>
+        <div class="toolbar">
+            <button routerLink="/admin" class="btn btn-default">ADMIN</button>
+        </div>
+        <button id="router" #r (click)="goTo(r.innerText)" style="display: none" >5b4e0eed6d8cbb0020c781ce</button>
+
+
+        <table id="fresh-table" class="table" data-link="row">
+            <thead><tr>
+                <th data-field="id" data-sortable="true">№</th>
+                <th data-field="name" data-sortable="true">Name</th>
+                <th data-field="salary" data-sortable="true">Theme</th>
+                <th data-field="country" data-sortable="true">Views</th>
+                <th data-field="city">Date</th>
+            </tr></thead>
+            <tbody>
+                <tr *ngFor="let song of songs">
+                    <td><a onclick="var r = document.getElementById('router'); r.innerText=this.id; r.click();" id="{{song._id}}">{{song.number}}</a></td>
+                    <td>{{song.name}}</td>
+                    <td>{{song.theme.name}}</td>
+                    <td>{{song.views}}</td>
+                    <td>{{song.date.slice(0,10)}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
-    <table id="fresh-table" class="table">
-      <thead><tr>
-      <th data-field="id" data-sortable="true">№</th>
-      <th data-field="name" data-sortable="true">Name</th>
-      <th data-field="salary" data-sortable="true">Theme</th>
-      <th data-field="country" data-sortable="true">Views</th>
-      <th data-field="city">Date</th>
-      <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
-      </tr></thead>
-      <tbody>
-      <div *ngFor="let song of songs" >
-      <tr onclick="alert(2)">
-        <td>{{song.number}}</td>
-        <td>{{song.name}}</td>
-        <td>{{song.theme.name}}</td>
-        <td>{{song.views}}</td>
-        <td>{{song.date.slice(0,10)}}</td>
-        <td></td>
-      </tr>
-      </div>
-      </tbody>
-    </table>
-  </div>
-  <button routerLink="/song/5b4e0b76bc7dc3276a83f848">song</button>
-
 </div>
 
 
 
 <link href="/assets/css/bootstrap.css" rel="stylesheet" />
 <link href="/assets/css/fresh-bootstrap-table.css" rel="stylesheet" />
+<link href="/assets/css/jasny-bootstrap.css" rel="stylesheet" />
 
 <!--     Fonts and icons     -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
