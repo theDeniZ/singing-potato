@@ -19,8 +19,8 @@ export class ListComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.getSongs();
-        this.getThemes();
+        this.getThemesAndSongs();
+        // this.getSongs();
     }
 
     log(message: string) {
@@ -41,8 +41,8 @@ export class ListComponent implements OnInit {
     }
 
 
-    getThemes() {
-        this.songService.getThemes().subscribe(t => this.themes = t, error2 => this.log(error2.message));
+    getThemesAndSongs() {
+        this.songService.getThemes().subscribe(t => this.themes = t, error2 => this.log(error2.message), () => this.getSongs());
     }
 
 
