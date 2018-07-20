@@ -23,7 +23,7 @@
                 <tr *ngFor="let song of songs">
                     <td><a onclick="var r = document.getElementById('router'); r.innerText=this.id; r.click();" id="{{song._id}}">{{song.number}}</a></td>
                     <td>{{song.name}}</td>
-                    <td>{{song.theme.name}}</td>
+                    <td>{{getTheme(song.theme).name}}</td>
                     <td>{{song.views}}</td>
                     <td>{{song.date.slice(0,10)}}</td>
                 </tr>

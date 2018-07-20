@@ -59,15 +59,7 @@ export class AdminComponent implements OnInit {
             (song, index, list) => {
                 return song.name.toLowerCase().includes(str) || song.number.toString().includes(str);
             }
-        )
-    }
-
-    private getTheme(id: string): Theme {
-        for (let t of this.themes) {
-            if (t._id == id) {
-                return t;
-            }
-        }
+        );
     }
 
     private log(message: string) {
@@ -84,7 +76,7 @@ export class AdminComponent implements OnInit {
             _id: '',
             number: num,
             name: tit,
-            theme: this.getTheme(thId),
+            theme: thId,
             date: dat.length > 0 ? dat : null,
             views: 0
         };
@@ -101,7 +93,7 @@ export class AdminComponent implements OnInit {
             _id: id,
             number: n,
             name: tit,
-            theme: this.getTheme(thId),
+            theme: thId,
             date: dat,
             views: v
         };

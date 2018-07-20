@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ListItem } from '../listItem';
+import {ListItem, Theme} from '../listItem';
 import {SongsService} from '../songs.service';
 import {Router} from '@angular/router';
 
@@ -11,6 +11,7 @@ import {Router} from '@angular/router';
 export class ListComponent implements OnInit {
 
     songs: ListItem[];
+    themes: Theme[];
 
     constructor(
         private songService: SongsService,
@@ -19,6 +20,7 @@ export class ListComponent implements OnInit {
 
     ngOnInit() {
         this.getSongs();
+        this.getThemes();
     }
 
     log(message: string) {
@@ -35,8 +37,24 @@ export class ListComponent implements OnInit {
                 },
             error2 => this.log(error2),
             () => { this.loadScript(); }
-    );
+        );
     }
+
+
+    getThemes() {
+        this.songService.getThemes().subscribe(t => this.themes = t, error2 => this.log(error2.message));
+    }
+
+
+    private getTheme(id: string): Theme {
+        for (let t of this.themes) {
+            if (t._id == id) {
+                return t;
+            }
+        }
+    }
+
+
     //
     // eraseScript() {
     //     const scripts = document.getElementsByTagName('script');

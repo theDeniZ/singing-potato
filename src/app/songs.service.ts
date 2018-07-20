@@ -46,7 +46,7 @@ export class SongsService {
         if (song.date) {
             body = body.set('date', song.date);
         }
-        body = body.set('themeId', song.theme._id);
+        body = body.set('theme', song.theme);
         return this.http.post<ListItem>(this.url + this.songsUrl, body, httpOptions);
     }
 
@@ -55,7 +55,7 @@ export class SongsService {
         body = body.set('name', song.name);
         body = body.set('number', song.number.toString());
         body = body.set('date', song.date);
-        body = body.set('themeId', song.theme._id);
+        body = body.set('theme', song.theme);
         return this.http.put<ListItem>(this.url + this.songsUrl + song._id, body, httpOptions);
     }
 

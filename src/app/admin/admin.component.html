@@ -35,7 +35,7 @@
             <input #views type="number" value="{{song.views}}" hidden style="display: none">
             <input #title type="text" value="{{song.name}}">
             <select #theme>
-                <option *ngFor="let theme of themes" [selected]="theme._id === song.theme._id" value="{{theme._id}}">{{theme.name}}</option>
+                <option *ngFor="let theme of themes" [selected]="theme._id === song.theme" value="{{theme._id}}">{{theme.name}}</option>
             </select>
             <input #date type="text" value="{{song.date}}">
             <button class="add-button triple"  (click)="editSong(id.value, num.value, title.value, theme.selectedOptions.item(0).value, date.value, views.value)">Save</button>
