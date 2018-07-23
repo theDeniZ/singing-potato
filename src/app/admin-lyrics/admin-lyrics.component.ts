@@ -34,6 +34,10 @@ export class AdminLyricsComponent implements OnInit {
     }
 
     edit() {
+        if (this.lyr.length === 0) {
+            this.delete();
+            return;
+        }
         this.lyrics.lyrics = this.lyr;
         this.songService.editLyrics(this.lyrics).subscribe(this.lyricsHandler, null, () => {this.log('saved'); this.router.navigate(['/admin'])});
     }
@@ -60,5 +64,21 @@ export class AdminLyricsComponent implements OnInit {
 
     log(m: string) {
         this.songService.log(m);
+    }
+
+
+
+    loadScript() {
+        const dynamicScripts = [ ];
+
+        for (let i = 0; i < dynamicScripts .length; i++) {
+            const node = document.createElement('script');
+            node.src = 'assets/js/' + dynamicScripts [i];
+            node.type = 'text/javascript';
+            node.async = false;
+            node.charset = 'utf-8';
+            document.getElementsByTagName('head')[0].appendChild(node);
+        }
+
     }
 }

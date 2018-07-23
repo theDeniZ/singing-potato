@@ -59,7 +59,7 @@ export class ListComponent implements OnInit {
     // eraseScript() {
     //     const scripts = document.getElementsByTagName('script');
     //     for (let i = 0; i < scripts.length; ++i) {
-    //         if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes('list')) {
+    //         if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes('js')) {
     //             scripts[i].remove();
     //         }
     //     }
@@ -70,7 +70,7 @@ export class ListComponent implements OnInit {
 
         for (let i = 0; i < dynamicScripts .length; i++) {
             const node = document.createElement('script');
-            node.src = 'assets/list/' + dynamicScripts [i];
+            node.src = 'assets/js/' + dynamicScripts [i];
             node.type = 'text/javascript';
             node.async = false;
             node.charset = 'utf-8';

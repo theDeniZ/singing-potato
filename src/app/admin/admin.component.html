@@ -2,7 +2,7 @@
     <!--here-->
 
     <div class="background"></div>
-    <div class="header">
+    <div class="header" [ngClass]="theme ? 'non-fixed' : '' ">
         <button routerLink="/" class="addButton">Back</button>
         <button (click)="add = true; edit = false;  theme = false;" class="addButton">Add</button>
         <button (click)="edit = true; add = false; theme = false;" class="addButton">Edit</button>
@@ -29,7 +29,7 @@
     <div *ngIf="edit" class="edit content">
         <div *ngFor="let song of displayedSongs" class="song-list">
             <div *ngIf="song._id">
-            <input type="text" value=" ID number: {{song.number}}. see below to edit" disabled class="edit-head">
+            <input type="text" value="#{{song.number}} [{{song._id}}]" disabled class="edit-head">
             <input #num type="text" value="{{song.number}}">
             <input #id type="text" value="{{song._id}}" hidden style="display: none">
             <input #views type="number" value="{{song.views}}" hidden style="display: none">
@@ -39,8 +39,8 @@
             </select>
             <input #date type="text" value="{{song.date}}">
             <button class="add-button triple"  (click)="editSong(id.value, num.value, title.value, theme.selectedOptions.item(0).value, date.value, views.value)">Save</button>
-                <button class="add-button triple editt" routerLink="/admin/{{song._id}}" >Lyrics</button>
-            <button class="add-button triple delete"  (click)="deleteSong(id.value)">Delete song</button>
+                <button class="add-button triple editt" routerLink="/admin/{{song._id}}">Lyrics</button>
+            <button class="add-button triple delete"  (click)="deleteSong(id.value)">Delete</button>
             </div>
         </div>
     </div>

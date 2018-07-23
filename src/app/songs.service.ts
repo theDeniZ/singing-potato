@@ -35,8 +35,17 @@ export class SongsService {
         return this.http.get<ListItem[]>(this.url + this.songsUrl, httpOptions);
     }
 
-    getSong(id: string): Observable<ListItem> {
-        return this.http.get<ListItem>(this.url + this.songsUrl + id, httpOptions);
+    getSong(id: string, inc: boolean = false): Observable<ListItem> {
+        let htt = httpOptions;
+        if (inc) {
+            htt = {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'add' : '1'
+                })
+            };
+        }
+        return this.http.get<ListItem>(this.url + this.songsUrl + id, htt);
     }
 
     addSong(song: ListItem): Observable<ListItem> {

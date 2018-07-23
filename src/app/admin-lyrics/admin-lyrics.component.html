@@ -1,14 +1,20 @@
 <div class="green-back"></div>
 <div class="add header">
     <button routerLink="/admin" class="addButton" >Back</button>
+
+    <button *ngIf="lyrics" class="addButton save" (click)="edit()">Save</button>
+    <button *ngIf="!lyrics" class="addButton save" (click)="add()">Add</button>
 </div>
 
+<div class="background"></div>
 <div class="space"></div>
 <div class=" half content">
     <input type="text" value="Song #{{song.number}}. '{{song.name}}'" class="edit-head" disabled>
     <br>
+    <!--<editor apiKey="612hjhs0xfdyn8wy7bo2ciiwtica388m526cr2myrsp32ty0" [initialValue]="lyr" #tex (onChange)="log(lyr)" (ngModel)="lyr" ></editor>-->
+
+
     <textarea #tex (keyup)="lyr = tex.value">{{lyr}}</textarea>
-    <button *ngIf="lyrics" class="addButton" (click)="edit()">Save</button>
-    <button *ngIf="!lyrics" class="addButton" (click)="add()">Add</button>
-    <button class="addButton delete" (click)="delete()">Delete</button>
+
+    <!--<button class="addButton delete" (click)="delete()">Delete</button>-->
 </div>

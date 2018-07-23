@@ -23,7 +23,7 @@ export class LyricsComponent implements OnInit {
     ngOnInit() {
         this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
-                this.songService.getSong(params.get('id')))
+                this.songService.getSong(params.get('id'), true))
         ).subscribe(s => this.song = s );
         this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>

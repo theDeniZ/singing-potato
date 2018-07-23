@@ -11,6 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { MessagesComponent } from './messages/messages.component';
 import { AdminLyricsComponent } from './admin-lyrics/admin-lyrics.component';
 import { LyricsComponent } from './lyrics/lyrics.component';
+import {EditorModule} from '@tinymce/tinymce-angular';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { LyricsComponent } from './lyrics/lyrics.component';
   imports: [
     HttpClientModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    EditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
