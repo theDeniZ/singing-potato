@@ -1,11 +1,47 @@
-<p>
-    lyrics works!
-</p>
+<div class="back"></div>
+<div id="wrapper">
+    <div id="header">
+        <div id="logo">
+            <h1><a href="#">{{song.name}}</a></h1>
+        </div>
+        <!-- end #search -->
+    </div>
+    <!-- end #header -->
+    <div id="menu">
+        <ul>
+            <li><a routerLink="/">Home</a></li>
+        </ul>
+    </div>
+    <!-- end #menu -->
+    <div id="page">
+        <div id="content">
+            <div class="post">
+                <div class="entry">
+                    <div [froalaView]="lyr"></div>
+                </div>
+            </div>
 
-<button routerLink="/">Back</button>
+            <div class="post"> </div>
+        </div>
+        <!-- end #content -->
+        <!-- end #sidebar -->
+        <div style="clear: both;">&nbsp;</div>
+    </div>
+    <!-- end #page -->
 
-{{song.number}} : {{song.name}}
 
-<br>
+</div>
+<div>
+    <footer class="entry-footer" style="padding: 15px;border-bottom: 1px solid rgba(0,0,0,.05);">
+        <div class="byline">
+            <span><time>{{getTime()}}</time></span>
+            &nbsp;•&nbsp;
+            <span><span><a  href="/profile/VeD">{{theme.name}}</a></span></span>			&nbsp;•&nbsp;
+            <span>{{song.views}} views</span>
+        </div>
+    </footer></div>
 
-<div [froalaView]="lyr"></div>
+<div id="footer">
+    <p>© 2018 <a routerLink="/" rel="nofollow">Concord</a></p>
+</div>
+<!-- end #footer -->
