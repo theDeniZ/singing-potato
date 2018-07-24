@@ -66,7 +66,7 @@ export class ListComponent implements OnInit {
     // }
 
     loadScript() {
-        const dynamicScripts = ['jquery-1.11.2.min.js', 'bootstrap-table.js', 'list.js', 'jasny-bootstrap.js'];
+        const dynamicScripts = ['bootstrap-table.js', 'list.js', 'jasny-bootstrap.js'];
 
         for (let i = 0; i < dynamicScripts .length; i++) {
             const node = document.createElement('script');

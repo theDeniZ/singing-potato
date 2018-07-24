@@ -70,7 +70,7 @@ export class AdminLyricsComponent implements OnInit {
 
 
     loadScript() {
-        const dynamicScripts = [ 'jquery-1.11.2.min.js' ];
+        const dynamicScripts = [ ];
 
         for (let i = 0; i < dynamicScripts .length; i++) {
             const node = document.createElement('script');
