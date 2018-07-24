@@ -23,6 +23,7 @@ export class AdminLyricsComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        // this.loadScript();
         this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.songService.getSong(params.get('id')))
@@ -69,7 +70,7 @@ export class AdminLyricsComponent implements OnInit {
 
 
     loadScript() {
-        const dynamicScripts = [ ];
+        const dynamicScripts = [ 'jquery-1.11.2.min.js' ];
 
         for (let i = 0; i < dynamicScripts .length; i++) {
             const node = document.createElement('script');

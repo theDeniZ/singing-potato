@@ -11,7 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { MessagesComponent } from './messages/messages.component';
 import { AdminLyricsComponent } from './admin-lyrics/admin-lyrics.component';
 import { LyricsComponent } from './lyrics/lyrics.component';
-import {EditorModule} from '@tinymce/tinymce-angular';
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,8 @@ import {EditorModule} from '@tinymce/tinymce-angular';
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
-    EditorModule
+    FroalaEditorModule,
+    FroalaViewModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -8,15 +8,21 @@
 
 <div class="background"></div>
 <div class="space"></div>
-<div class=" half content">
+<div class=" half content left">
     <input type="text" value="Song #{{song.number}}. '{{song.name}}'" class="edit-head" disabled>
     <br>
     <!--<editor apiKey="612hjhs0xfdyn8wy7bo2ciiwtica388m526cr2myrsp32ty0" [initialValue]="lyr" #tex (onChange)="log(lyr)" (ngModel)="lyr" ></editor>-->
 
 
-    <textarea #tex (keyup)="lyr = tex.value">{{lyr}}</textarea>
+    <!--<textarea #tex (keyup)="lyr = tex.value">{{lyr}}</textarea>-->
+
+    <div [froalaEditor] [(froalaModel)]="lyr"></div>
+
 
     <!--<button class="addButton delete" (click)="delete()">Delete</button>-->
 </div>
+<div class="half content right" [froalaView]="lyr"></div>
 
 <link href="/assets/css/admin.css" rel="stylesheet" />
+<!--<link href="node_modules/froala-editor/css/froala_editor.pkgd.min.css" rel="stylesheet">-->
+<!--<link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">-->

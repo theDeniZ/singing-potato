@@ -14,6 +14,8 @@ export class LyricsComponent implements OnInit {
     song: ListItem = null;
     lyrics: Lyrics = null;
 
+    lyr = '';
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -28,7 +30,7 @@ export class LyricsComponent implements OnInit {
         this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.songService.getLyric(params.get('id')))
-        ).subscribe(l => this.lyrics = l );
+        ).subscribe(l => {this.lyrics = l; this.lyr = l.lyrics;} );
     }
 
     getLyrics() {
