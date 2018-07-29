@@ -111,6 +111,10 @@ export class ListComponent implements OnInit {
         this.router.navigate(['/song/' + song]);
     }
 
+    getDate(iso: string) {
+        const d = new Date(iso);
+        return d.getDate() + '.' + d.getMonth() + '.' + (d.getFullYear() - 2000);
+    }
 }
 
 
