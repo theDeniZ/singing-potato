@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import {ListItem, Theme} from '../listItem';
 import {SongsService} from '../songs.service';
 import {Router} from '@angular/router';
+import {MatPaginator, MatTableDataSource, MatSort} from '@angular/material';
+
 
 @Component({
     selector: 'app-list',
@@ -12,6 +14,14 @@ export class ListComponent implements OnInit {
 
     songs: ListItem[];
     themes: Theme[];
+    displayedColumns: string[] = ['number', 'name', 'theme', 'key', 'views', 'date'];
+    dataSource = null;
+    displayedSongs: ListItem[];
+    theme: string = '';
+    key: string = '';
+
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
     constructor(
         private songService: SongsService,
@@ -20,6 +30,7 @@ export class ListComponent implements OnInit {
 
     ngOnInit() {
         this.getThemesAndSongs();
+
         // this.getSongs();
     }
 
@@ -34,9 +45,19 @@ export class ListComponent implements OnInit {
                       (a, b) => {
                             return a.number - b.number;
                         });
+                    this.displayedSongs = this.songs;
                 },
             error2 => this.log(error2),
-            () => { this.loadScript(); }
+            () => {
+                this.dataSource = new MatTableDataSource(this.displayedSongs);
+                this.dataSource.sort = this.sort;
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.filterPredicate =
+                    (d: ListItem, f: string) => d.number.toString().includes(f) ||
+                        d.name.toLowerCase().includes(f) || this.getTheme(d.theme).name.toLowerCase().includes(f) ||
+                        d.name.toLowerCase().startsWith(f) || this.getTheme(d.theme).name.toLowerCase().startsWith(f) ||
+                        d.name2.toLowerCase().startsWith(f) || d.name2.toLowerCase().includes(f);
+            }
         );
     }
 
@@ -47,40 +68,56 @@ export class ListComponent implements OnInit {
 
 
     private getTheme(id: string): Theme {
-        for (let t of this.themes) {
-            if (t._id == id) {
-                return t;
-            }
+        return this.themes.find((t, i, a) => t._id === id);
+    }
+
+    applyFilter(filterValue: string) {
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    filterByTheme(t: string) {
+        this.theme = t;
+        this.displayedSongs = this.displayedSongs.filter((l, n, a) => l.theme === t);
+        this.dataSource.data = this.displayedSongs;
+    }
+
+    filterByKey(k: string) {
+        this.key = k;
+        this.displayedSongs = this.displayedSongs.filter((l, n, a) => l.key === k);
+        this.dataSource.data = this.displayedSongs;
+    }
+
+    clearFilterTheme() {
+        this.theme = '';
+        this.displayedSongs = this.songs;
+        if (this.key.length > 0) {
+            this.filterByKey(this.key);
+        } else {
+            this.dataSource.data = this.displayedSongs;
         }
     }
 
-
-    //
-    // eraseScript() {
-    //     const scripts = document.getElementsByTagName('script');
-    //     for (let i = 0; i < scripts.length; ++i) {
-    //         if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes('js')) {
-    //             scripts[i].remove();
-    //         }
-    //     }
-    // }
-
-    loadScript() {
-        const dynamicScripts = ['bootstrap-table.js', 'list.js', 'jasny-bootstrap.js'];
-
-        for (let i = 0; i < dynamicScripts .length; i++) {
-            const node = document.createElement('script');
-            node.src = 'assets/js/' + dynamicScripts [i];
-            node.type = 'text/javascript';
-            node.async = false;
-            node.charset = 'utf-8';
-            document.getElementsByTagName('head')[0].appendChild(node);
+    clearFilterKey() {
+        this.key = '';
+        this.displayedSongs = this.songs;
+        if (this.theme.length > 0) {
+            this.filterByTheme(this.theme);
+        } else {
+            this.dataSource.data = this.displayedSongs;
         }
-
     }
 
     goTo(song: string) {
         this.router.navigate(['/song/' + song]);
     }
 
+}
+
+
+export interface List {
+    _id: string;
+    name: string;
+    theme: string;
+    views: number;
+    date: string;
 }

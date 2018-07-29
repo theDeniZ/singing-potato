@@ -78,7 +78,9 @@ export class AdminComponent implements OnInit {
             name: tit,
             theme: thId,
             date: dat.length > 0 ? dat : null,
-            views: 0
+            views: 0,
+            name2: null,
+            key: null
         };
 
         this.songService.addSong(song).subscribe(
@@ -88,14 +90,16 @@ export class AdminComponent implements OnInit {
         );
     }
 
-    editSong(id: string, n: number, tit: string, thId: string, dat: string, v: number) {
+    editSong(id: string, n: number, tit: string, thId: string, dat: string, v: number, n2: string, k: string) {
         const song: ListItem = {
             _id: id,
             number: n,
             name: tit,
             theme: thId,
             date: dat,
-            views: v
+            views: v,
+            name2: n2,
+            key: k
         };
         this.songService.editSong(song).subscribe(
             arrived => this.songs[this.songs.indexOf(song)] = arrived,

@@ -12,6 +12,8 @@ import { MessagesComponent } from './messages/messages.component';
 import { AdminLyricsComponent } from './admin-lyrics/admin-lyrics.component';
 import { LyricsComponent } from './lyrics/lyrics.component';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import {MatTableModule, MatFormFieldModule, MatInputModule, MatPaginatorModule, MatSortModule} from '@angular/material';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,13 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     BrowserModule,
     AppRoutingModule,
     FroalaEditorModule,
-    FroalaViewModule
+    FroalaViewModule,
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatFormFieldModule,
+      MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -38,7 +38,9 @@
                 <option *ngFor="let theme of themes" [selected]="theme._id === song.theme" value="{{theme._id}}">{{theme.name}}</option>
             </select>
             <input #date type="text" value="{{song.date}}">
-            <button class="add-button triple"  (click)="editSong(id.value, num.value, title.value, theme.selectedOptions.item(0).value, date.value, views.value)">Save</button>
+            <input #n2 type="text" value="{{song.name2}}" placeholder="Name 2 (search only)">
+            <input #key type="text" value="{{song.key}}" placeholder="Key">
+            <button class="add-button triple"  (click)="editSong(id.value, num.value, title.value, theme.selectedOptions.item(0).value, date.value, views.value, n2.value, key.value)">Save</button>
                 <button class="add-button triple editt" routerLink="/admin/{{song._id}}">Lyrics</button>
             <button class="add-button triple delete"  (click)="deleteSong(id.value)">Delete</button>
             </div>

@@ -1,43 +1,110 @@
 
-<div class="wrapper">
-    <div class="fresh-table full-color-orange full-screen-table">
-        <!--    Available colors for the full background: full-color-blue, full-color-azure, full-color-green, full-color-red, full-color-orange
-                Available colors only for the toolbar: toolbar-color-blue, toolbar-color-azure, toolbar-color-green, toolbar-color-red, toolbar-color-orange
-        -->
 
-        <div class="toolbar">
-            <button routerLink="/admin" class="btn btn-default">ADMIN</button>
-        </div>
-        <button id="router" #r (click)="goTo(r.innerText)" style="display: none" >5b4e0eed6d8cbb0020c781ce</button>
+<mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+</mat-form-field>
+
+<div *ngIf="key.length > 0 || theme.length > 0">
+    <div *ngIf="theme.length > 0" (click)="clearFilterTheme()" >{{getTheme(theme).name}}</div>
+    <div *ngIf="key.length > 0" (click)="clearFilterKey()">{{key}}</div>
+</div>
+
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Number Column -->
+        <ng-container matColumnDef="number">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
+            <td mat-cell *matCellDef="let element"> {{element.number}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header > Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <!-- Theme Column -->
+        <ng-container matColumnDef="theme">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Theme </th>
+            <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation(); filterByTheme(element.theme)"> {{getTheme(element.theme).name}} </td>
+        </ng-container>
+
+        <!-- Key Column -->
+        <ng-container matColumnDef="key">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Key </th>
+            <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation(); filterByKey(element.key)"> {{element.key}} </td>
+        </ng-container>
+
+        <!-- Views Column -->
+        <ng-container matColumnDef="views">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Views </th>
+            <td mat-cell *matCellDef="let element"> {{element.views}} </td>
+        </ng-container>
+
+        <!-- Date Column -->
+        <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+            <td mat-cell *matCellDef="let element"> {{element.date.slice(0,10)}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="goTo(row._id);"></tr>
 
 
-        <table id="fresh-table" class="table" data-link="row">
-            <thead><tr>
-                <th data-field="id" data-sortable="true">№</th>
-                <th data-field="name" data-sortable="true">Name</th>
-                <th data-field="salary" data-sortable="true">Theme</th>
-                <th data-field="country" data-sortable="true" class="hidden-xs">Views</th>
-                <th data-field="city" class="hidden-xs">Date</th>
-            </tr></thead>
-            <tbody>
-                <tr *ngFor="let song of songs">
-                    <td><a onclick="var r = document.getElementById('router'); r.innerText=this.id; r.click();" id="{{song._id}}">{{song.number}}</a></td>
-                    <td>{{song.name}}</td>
-                    <td>{{getTheme(song.theme).name}}</td>
-                    <td class="hidden-xs">{{song.views}}</td>
-                    <td class="hidden-xs">{{song.date.slice(0,10)}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
 </div>
 
 
 
-<link href="/assets/css/bootstrap.css" rel="stylesheet" />
-<link href="/assets/css/fresh-bootstrap-table.css" rel="stylesheet" />
-<link href="/assets/css/jasny-bootstrap.css" rel="stylesheet" />
 
-<!--     Fonts and icons     -->
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-<link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+
+
+
+<!--<div class="wrapper">-->
+    <!--<div class="fresh-table full-color-orange full-screen-table">-->
+        <!--&lt;!&ndash;    Available colors for the full background: full-color-blue, full-color-azure, full-color-green, full-color-red, full-color-orange-->
+                <!--Available colors only for the toolbar: toolbar-color-blue, toolbar-color-azure, toolbar-color-green, toolbar-color-red, toolbar-color-orange-->
+        <!--&ndash;&gt;-->
+
+        <!--<div class="toolbar">-->
+            <!--<button routerLink="/admin" class="btn btn-default">ADMIN</button>-->
+        <!--</div>-->
+        <!--<button id="router" #r (click)="goTo(r.innerText)" style="display: none" >5b4e0eed6d8cbb0020c781ce</button>-->
+
+
+        <!--<table id="fresh-table" class="table" data-link="row">-->
+            <!--<thead><tr>-->
+                <!--<th data-field="id" data-sortable="true">№</th>-->
+                <!--<th data-field="name" data-sortable="true">Name</th>-->
+                <!--<th data-field="salary" data-sortable="true">Theme</th>-->
+                <!--<th data-field="country" data-sortable="true" class="hidden-xs">Views</th>-->
+                <!--<th data-field="city" class="hidden-xs">Date</th>-->
+            <!--</tr></thead>-->
+            <!--<tbody>-->
+                <!--<tr *ngFor="let song of songs">-->
+                    <!--<td><a onclick="var r = document.getElementById('router'); r.innerText=this.id; r.click();" id="{{song._id}}">{{song.number}}</a></td>-->
+                    <!--<td>{{song.name}}</td>-->
+                    <!--<td>{{getTheme(song.theme).name}}</td>-->
+                    <!--<td class="hidden-xs">{{song.views}}</td>-->
+                    <!--<td class="hidden-xs">{{song.date.slice(0,10)}}</td>-->
+                <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+    <!--</div>-->
+<!--</div>-->
+
+
+
+<!--<link href="/assets/css/bootstrap.css" rel="stylesheet" />-->
+<!--<link href="/assets/css/fresh-bootstrap-table.css" rel="stylesheet" />-->
+<!--<link href="/assets/css/jasny-bootstrap.css" rel="stylesheet" />-->
+
+<!--&lt;!&ndash;     Fonts and icons     &ndash;&gt;-->
+<!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">-->
+<!--<link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>-->
