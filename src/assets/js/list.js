@@ -19,8 +19,8 @@ $().ready(function(){
         striped: true,
         sortable: true,
         height: table_height,
-        pageSize: 25,
-        pageList: [25,50,100],
+        pageSize: 29,
+        pageList: [29,58,87],
 
         formatShowingRows: function(pageFrom, pageTo, totalRows){
             //do nothing here, we don't want to show the text "showing x of y from..."
