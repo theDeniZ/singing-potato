@@ -1,6 +1,6 @@
 
-<mat-form-field>
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+<mat-form-field class="wr">
+    <input class="tb" matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
 </mat-form-field>
 
 <div *ngIf="key.length > 0 || theme.length > 0">
