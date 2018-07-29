@@ -9,45 +9,45 @@
 </div>
 
 <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
+    <table mat-table [dataSource]="dataSource" matSort class="tbl">
 
         <!--- Note that these columns can be defined in any order.
               The actual rendered columns are set as a property on the row definition" -->
 
         <!-- Number Column -->
         <ng-container matColumnDef="number">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
-            <td mat-cell *matCellDef="let element"> {{element.number}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-number"> No. </th>
+            <td mat-cell *matCellDef="let element" class="column-number"> {{element.number}} </td>
         </ng-container>
 
         <!-- Name Column -->
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header > Name </th>
-            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-name"> Name </th>
+            <td mat-cell *matCellDef="let element" class="column-name"> {{element.name}} </td>
         </ng-container>
 
         <!-- Theme Column -->
         <ng-container matColumnDef="theme">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Theme </th>
-            <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation(); filterByTheme(element.theme)"> {{getTheme(element.theme).name}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-theme"> Theme </th>
+            <td mat-cell *matCellDef="let element" class="column-theme" (click)="$event.stopPropagation(); filterByTheme(element.theme)"> {{getTheme(element.theme).name}} </td>
         </ng-container>
 
         <!-- Key Column -->
         <ng-container matColumnDef="key">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Key </th>
-            <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation(); filterByKey(element.key)"> {{element.key}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-key"> Key </th>
+            <td mat-cell *matCellDef="let element" class="column-key" (click)="$event.stopPropagation(); filterByKey(element.key)"> {{element.key}} </td>
         </ng-container>
 
         <!-- Views Column -->
         <ng-container matColumnDef="views">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Views </th>
-            <td mat-cell *matCellDef="let element"> {{element.views}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header  class="hide-small"> Views </th>
+            <td mat-cell *matCellDef="let element"  class="hide-small"> {{element.views}} </td>
         </ng-container>
 
         <!-- Date Column -->
         <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-            <td mat-cell *matCellDef="let element"> {{element.date.slice(0,10)}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header  class="hide-small"> Date </th>
+            <td mat-cell *matCellDef="let element"  class="hide-small"> {{element.date.slice(0,10)}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -56,5 +56,7 @@
 
     </table>
 
-    <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+    <!--<mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>-->
 </div>
+
+<link href="/assets/css/list.css" rel="stylesheet" />

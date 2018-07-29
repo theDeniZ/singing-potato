@@ -1,0 +1,1 @@
+@media screen and (max-width: 600px) {    .hide-small {        display: none;    }    .column-number {        font-size: 10px !important;    }    .column-name {        font-size: 10px !important;    }    .column-theme {        font-size: 10px !important;    }    .column-key {        font-size: 10px !important;    }}

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild} from '@angular/core';
 import {ListItem, Theme} from '../listItem';
 import {SongsService} from '../songs.service';
 import {Router} from '@angular/router';
-import {MatPaginator, MatTableDataSource, MatSort} from '@angular/material';
+import { MatTableDataSource, MatSort} from '@angular/material';
 
 
 @Component({
@@ -20,7 +20,7 @@ export class ListComponent implements OnInit {
     theme: string = '';
     key: string = '';
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+    // @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(
@@ -51,7 +51,7 @@ export class ListComponent implements OnInit {
             () => {
                 this.dataSource = new MatTableDataSource(this.displayedSongs);
                 this.dataSource.sort = this.sort;
-                this.dataSource.paginator = this.paginator;
+                // this.dataSource.paginator = this.paginator;
                 this.dataSource.filterPredicate =
                     (d: ListItem, f: string) => d.number.toString().includes(f) ||
                         d.name.toLowerCase().includes(f) || this.getTheme(d.theme).name.toLowerCase().includes(f) ||
