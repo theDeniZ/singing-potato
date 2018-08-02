@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import {SongsService} from '../songs.service';
 import {ListItem, Theme} from '../listItem';
+import { fromEvent, merge, of, Observable } from 'rxjs';
+import { mapTo } from 'rxjs/operators';
 
 @Component({
     selector: 'app-admin',
@@ -9,6 +11,10 @@ import {ListItem, Theme} from '../listItem';
     styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
+
+    online$: Observable<boolean>;
+    offlineMode = 'Off';
+    capacity = 0;
 
     edit = true;
     add = false;
@@ -24,17 +30,35 @@ export class AdminComponent implements OnInit {
     constructor(
         private route: Router,
         private songService: SongsService
-    ) { }
+    ) {
+        this.online$ = songService.online$;
+    }
 
     ngOnInit() {
         this.Guard();
         this.getThemes();
         this.getSongs();
+        if (localStorage.getItem('offlineMode')) {
+            this.offlineMode = 'On';
+        }
+        this.capacity = localStorage.length;
     }
 
     Guard() {
         if (!localStorage.getItem('logged')) {
             this.route.navigate(['/login']);
+        }
+    }
+
+    toggleOffline() {
+        if (localStorage.getItem('offlineMode')) {
+            localStorage.removeItem('offlineMode');
+            this.offlineMode = 'Off';
+            this.songService.clearLocalStorage();
+        } else {
+            localStorage.setItem('offlineMode', 'true');
+            this.offlineMode = 'On';
+            this.songService.storeDataToLocal();
         }
     }
 
