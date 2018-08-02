@@ -18,6 +18,8 @@ const httpOptions = {
 })
 export class SongsService {
 
+    static status = false;
+
     online$: Observable<boolean>;
 
     private url = 'https://j-serv-s.herokuapp.com/';
@@ -26,16 +28,31 @@ export class SongsService {
     private themeUrl = 'themes/';
     private lyricsUrl = 'lyrics/';
 
+    private time = 5000;
+
+
+
     constructor(
         private http: HttpClient,
         private messageService: MessageService,
         private offline: OfflineService
     ) {
-        this.online$ = merge(
-            of(navigator.onLine),
-            fromEvent(window, 'online').pipe(mapTo(true)),
-            fromEvent(window, 'offline').pipe(mapTo(false))
-        );
+        const serv = this;
+        this.online$ = Observable.create(obs => {
+            obs.next(SongsService.status);
+
+            setInterval(function () {
+                serv.http.get(serv.url + serv.themeUrl).subscribe(
+                    _ => {SongsService.status = true; obs.next(true); },
+                    _ => {SongsService.status = false; obs.next(false); }
+                );
+            }, serv.time);
+        });
+        // this.online$ = merge(
+        //     of(navigator.onLine),
+        //     fromEvent(window, 'online').pipe(mapTo(true)),
+        //     fromEvent(window, 'offline').pipe(mapTo(false))
+        // );
     }
 
     log(message: string) {
