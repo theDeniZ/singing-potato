@@ -19,6 +19,7 @@ const httpOptions = {
 export class SongsService {
 
     static status = false;
+    static singleTon;
 
     online$: Observable<boolean>;
 
@@ -37,22 +38,37 @@ export class SongsService {
         private messageService: MessageService,
         private offline: OfflineService
     ) {
-        const serv = this;
-        this.online$ = Observable.create(obs => {
-            obs.next(SongsService.status);
-
-            setInterval(function () {
-                serv.http.get(serv.url + serv.themeUrl).subscribe(
-                    _ => {SongsService.status = true; obs.next(true); },
-                    _ => {SongsService.status = false; obs.next(false); }
+        if (SongsService.singleTon) {
+            this.log('ha ha');
+            return SongsService.singleTon;
+        } else {
+            if (navigator && window) {
+                this.online$ = merge(
+                    of(navigator.onLine),
+                    fromEvent(window, 'online').pipe(mapTo(true)),
+                    fromEvent(window, 'offline').pipe(mapTo(false))
                 );
-            }, serv.time);
-        });
-        // this.online$ = merge(
-        //     of(navigator.onLine),
-        //     fromEvent(window, 'online').pipe(mapTo(true)),
-        //     fromEvent(window, 'offline').pipe(mapTo(false))
-        // );
+            } else {
+                const serv = this;
+                this.online$ = Observable.create(obs => {
+                    obs.next(SongsService.status);
+
+                    setInterval(function () {
+                        serv.http.get(serv.url + serv.themeUrl).subscribe(
+                            _ => {
+                                SongsService.status = true;
+                                obs.next(true);
+                            },
+                            _ => {
+                                SongsService.status = false;
+                                obs.next(false);
+                            }
+                        );
+                    }, serv.time);
+                });
+            }
+        }
+        SongsService.singleTon = this;
     }
 
     log(message: string) {

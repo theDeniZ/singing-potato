@@ -5,6 +5,48 @@ import {ListItem, Theme} from '../listItem';
 import { fromEvent, merge, of, Observable } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
 
+const s1 = '@media screen and (min-width: 900px) {\n' +
+    '        input[type=text], select, input[type=number], input[type=date] {\n' +
+    '            padding: 12px 20px !important;\n' +
+    '            margin: 5px 0 !important;\n' +
+    '            font-size: 16px !important;\n' +
+    '        }\n' +
+    '        textarea {\n' +
+    '            font-size: 16px !important;\n' +
+    '        }\n' +
+    '        .triple {\n' +
+    '            font-size: 17px !important;\n' +
+    '        }\n' +
+    '        .space {\n' +
+    '            height: 8vw !important;\n' +
+    '        }\n' +
+    '        .half {\n' +
+    '            width: 50% !important;\n' +
+    '            left: 25% !important;\n' +
+    '            margin-top: 8vw !important;\n' +
+    '        }\n' +
+    '        .edit {\n' +
+    '            width: 100% !important;\n' +
+    '            /*padding: 0 !important;*/\n' +
+    '        }\n' +
+    '        .song-list {\n' +
+    '            width: 28% !important;\n' +
+    '            margin: 1% !important;\n' +
+    '        }\n' +
+    '        .left {\n' +
+    '            position: absolute !important;\n' +
+    '            width: 40% !important;\n' +
+    '            left: 5% !important;\n' +
+    '        }\n' +
+    '        .right {\n' +
+    '            position: absolute !important;\n' +
+    '            width: 40% !important;\n' +
+    '            left: 50% !important;\n' +
+    '        }\n' +
+    '    }';
+
+const dynamicStyles = [ s1 ];
+
 @Component({
     selector: 'app-admin',
     templateUrl: './admin.component.html',
@@ -42,6 +84,7 @@ export class AdminComponent implements OnInit {
             this.offlineMode = 'On';
         }
         this.capacity = localStorage.length;
+        this.loadStyle();
     }
 
     Guard() {
@@ -199,6 +242,30 @@ export class AdminComponent implements OnInit {
                 break;
             }
         }
+    }
+
+    eraseStyle() {
+        let e;
+        for (let i = 0; i < dynamicStyles .length; i++) {
+            if (e = document.getElementById('style-admin-' + i) ) {
+                e.remove();
+            }
+        }
+    }
+
+    loadStyle() {
+        this.eraseStyle();
+        for (let i = 0; i < dynamicStyles .length; i++) {
+            const node = document.createElement('style');
+            // node.src = 'assets/js/' + dynamicScripts [i];
+            node.innerHTML = dynamicStyles [i];
+            // node.type = 'text/javascript';
+            node.id = 'style-admin-' + i;
+            // node.async = false;
+            // node.charset = 'utf-8';
+            document.getElementsByTagName('head')[0].appendChild(node);
+        }
+
     }
 
 }
