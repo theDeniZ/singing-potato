@@ -9,14 +9,9 @@ import {MessageService} from './message.service';
 })
 export class OfflineService {
 
-    private songsKey = 'songs';
-    private songKey = 'song/';
-
-    private themesKey = 'themes';
-    private themeKey = 'theme/';
-
-    private lyricsKey = 'lyrics';
-    private lyricKey = 'lyric/';
+    songsKey = 'songs';
+    themesKey = 'themes';
+    lyricsKey = 'lyrics';
 
     constructor(
         private http: HttpClient,

@@ -96,14 +96,12 @@ export class AdminComponent implements OnInit {
     toggleOffline() {
 
         if (localStorage.getItem('offlineMode')) {
-            // localStorage.removeItem('offlineMode');
+            localStorage.removeItem('offlineMode');
             this.offlineMode = 'Off';
             this.songService.clearLocalStorage(false);
             this.capacity = '0B';
         } else {
-            localStorage.setItem('offlineMode', 'true');
-            this.offlineMode = 'On';
-            this.songService.storeDataToLocal(size => this.capacity = size);
+            this.songService.storeDataToLocal(size => {this.capacity = size; this.offlineMode = 'On'; });
         }
     }
 

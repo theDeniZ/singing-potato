@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { ListItem, Theme, Lyrics } from './listItem';
 import {MessageService} from './message.service';
-import {catchError, tap} from 'rxjs/internal/operators';
+import {catchError, count, tap} from 'rxjs/internal/operators';
 import {OfflineService} from './offline.service';
 import { fromEvent, merge, of, Observable } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
@@ -38,6 +38,7 @@ export class SongsService {
         private messageService: MessageService,
         private offline: OfflineService
     ) {
+        this.actualize();
         // if (SongsService.singleTon) {
         //     this.log('ha ha');
         //     return SongsService.singleTon;
@@ -72,7 +73,8 @@ export class SongsService {
     }
 
     log(message: string) {
-        this.messageService.add(message);
+        // this.messageService.add(message);
+        console.log(message);
     }
 
     getSongs(): Observable<ListItem[]> {
@@ -281,19 +283,45 @@ export class SongsService {
         );
     }
 
+    actualize() {
+        console.log('actualising');
+        if (localStorage.getItem('date')) {
+            const t = +((Date.now() - +localStorage.getItem('date')) / 1000).toFixed(0);
+            if (t > 12 * 60 * 60) {  // 12 hours * 60 minutes * 60 seconds
+                this.storeDataToLocal();
+            }
+            // this.log(t.toString());
+        } else {
+            this.storeDataToLocal();
+        }
+    }
+
     storeDataToLocal(callback: (size) => void = null) {
+
         let count = 0;
-        this.getThemes().subscribe(null, null, () => {count++; if (count === 3 && callback) {callback(this.getCapacityString()); }});
-        this.getSongs().subscribe(null, null, () => {count++; if (count === 3 && callback) {callback(this.getCapacityString()); }});
-        this.getLyrics().subscribe(null, null, () => {count++; if (count === 3 && callback) {callback(this.getCapacityString()); }});
+        const s = this;
+        function complete(data) {
+            if (data) {
+                count++;
+            }
+            if (count === 3 && callback) {
+                localStorage.setItem('date', Date.now().toString());
+                localStorage.setItem(s.offlineString, 'true');
+                callback(s.getCapacityString());
+            }
+        }
+
+
+        this.getThemes().subscribe(complete);
+        this.getSongs().subscribe(complete);
+        this.getLyrics().subscribe(complete);
     }
 
     clearLocalStorage(andLoad = true) {
-        const a = localStorage.getItem('logged');
-        localStorage.clear();
-        if (a) {
-            localStorage.setItem('logged', 'true');
-        }
+        localStorage.removeItem(this.offline.lyricsKey);
+        localStorage.removeItem(this.offline.themesKey);
+        localStorage.removeItem(this.offline.songsKey);
+        localStorage.removeItem(this.offlineString);
         if (andLoad) {
             localStorage.setItem(this.offlineString, 'true');
             this.storeDataToLocal();
