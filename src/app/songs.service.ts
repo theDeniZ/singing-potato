@@ -18,10 +18,10 @@ const httpOptions = {
 })
 export class SongsService {
 
-    static status = false;
-    static singleTon;
+    // static status = false;
+    // static singleTon;
 
-    online$: Observable<boolean>;
+    // online$: Observable<boolean>;
 
     private url = 'https://j-serv-s.herokuapp.com/';
     // private url = 'http://localhost:3000/';
@@ -29,7 +29,7 @@ export class SongsService {
     private themeUrl = 'themes/';
     private lyricsUrl = 'lyrics/';
 
-    private time = 5000;
+    private offlineString = 'offlineMode';
 
 
 
@@ -38,37 +38,37 @@ export class SongsService {
         private messageService: MessageService,
         private offline: OfflineService
     ) {
-        if (SongsService.singleTon) {
-            this.log('ha ha');
-            return SongsService.singleTon;
-        } else {
-            if (navigator && window) {
-                this.online$ = merge(
-                    of(navigator.onLine),
-                    fromEvent(window, 'online').pipe(mapTo(true)),
-                    fromEvent(window, 'offline').pipe(mapTo(false))
-                );
-            } else {
-                const serv = this;
-                this.online$ = Observable.create(obs => {
-                    obs.next(SongsService.status);
-
-                    setInterval(function () {
-                        serv.http.get(serv.url + serv.themeUrl).subscribe(
-                            _ => {
-                                SongsService.status = true;
-                                obs.next(true);
-                            },
-                            _ => {
-                                SongsService.status = false;
-                                obs.next(false);
-                            }
-                        );
-                    }, serv.time);
-                });
-            }
-        }
-        SongsService.singleTon = this;
+        // if (SongsService.singleTon) {
+        //     this.log('ha ha');
+        //     return SongsService.singleTon;
+        // } else {
+        //     if (navigator && window) {
+        //         this.online$ = merge(
+        //             of(navigator.onLine),
+        //             fromEvent(window, 'online').pipe(mapTo(true)),
+        //             fromEvent(window, 'offline').pipe(mapTo(false))
+        //         );
+        //     } else {
+        //         const serv = this;
+        //         this.online$ = Observable.create(obs => {
+        //             obs.next(SongsService.status);
+        //
+        //             setInterval(function () {
+        //                 serv.http.get(serv.url + serv.themeUrl).subscribe(
+        //                     _ => {
+        //                         SongsService.status = true;
+        //                         obs.next(true);
+        //                     },
+        //                     _ => {
+        //                         SongsService.status = false;
+        //                         obs.next(false);
+        //                     }
+        //                 );
+        //             }, serv.time);
+        //         });
+        //     }
+        // }
+        // SongsService.singleTon = this;
     }
 
     log(message: string) {
@@ -76,17 +76,17 @@ export class SongsService {
     }
 
     getSongs(): Observable<ListItem[]> {
-        let observe: Observable<ListItem[]> = new Observable<ListItem[]>();
-        this.online$.subscribe(online => {
-            if (online) {
-                observe = this.http.get<ListItem[]>(this.url + this.songsUrl, httpOptions).pipe(
-                    tap(d => {this.offline.setSongs(d); })
-                );
-            } else if (localStorage.getItem('offlineMode')) {
-                observe = this.offline.getSongs();
-            }
-        });
-        return observe;
+        return this.http.get<ListItem[]>(this.url + this.songsUrl, httpOptions).pipe(
+            tap(d => {this.offline.setSongs(d); }),
+            catchError(() => {
+                if (localStorage.getItem(this.offlineString)) {
+                    return this.offline.getSongs();
+                } else {
+                    this.log('offline, no stored data');
+                    return of(null);
+                }
+            })
+        );
     }
 
     getSong(id: string, inc: boolean = false): Observable<ListItem> {
@@ -99,17 +99,16 @@ export class SongsService {
                 })
             };
         }
-        let observe: Observable<ListItem> = new Observable<ListItem>();
-        this.online$.subscribe(online => {
-            if (online) {
-                observe = this.http.get<ListItem>(this.url + this.songsUrl + id, htt).pipe(
-                    tap(d => {this.offline.setSong(id, d); })
-                );
-            } else if (localStorage.getItem('offlineMode')) {
-                observe = this.offline.getSong(id);
-            }
-        });
-        return observe;
+        return this.http.get<ListItem>(this.url + this.songsUrl + id, htt).pipe(
+            catchError(() => {
+                if (localStorage.getItem(this.offlineString)) {
+                    return this.offline.getSong(id);
+                } else {
+                    this.log('offline, no stored data');
+                    return of(null);
+                }
+            })
+        );
     }
 
     addSong(song: ListItem): Observable<ListItem> {
@@ -127,223 +126,182 @@ export class SongsService {
         }
         body = body.set('theme', song.theme);
 
-        let observe: Observable<ListItem> = new Observable<ListItem>();
-        this.online$.subscribe(online => {
-            if (online) {
-                observe = this.http.post<ListItem>(this.url + this.songsUrl, body, httpOptions).pipe(
-                    tap(d => {this.offline.setSong(song._id, d); })
-                );
-            } else if (localStorage.getItem('offlineMode')) {
-                this.log('no can do, offline');
-                observe = this.offline.getSong(song._id);
-            }
-        });
-        return observe;
+        return this.http.post<ListItem>(this.url + this.songsUrl, body, httpOptions).pipe(
+            catchError(() => {
+                this.log('offline');
+                return of(null);
+            })
+        );
     }
 
     editSong(song: ListItem): Observable<ListItem> {
-        let observe: Observable<ListItem> = new Observable<ListItem>();
-        this.online$.subscribe(online => {
-            if (online) {
-                let body = new HttpParams();
-                body = body.set('name', song.name);
-                body = body.set('number', song.number.toString());
-                body = body.set('date', song.date);
-                body = body.set('theme', song.theme);
-                body = body.set('name2', song.name2);
-                body = body.set('key', song.key);
-                observe = this.http.put<ListItem>(this.url + this.songsUrl + song._id, body, httpOptions).pipe(
-                    tap(d => {this.offline.setSong(song._id, d); })
-                );
-            } else {
-                this.log('no can do, offline');
-            }
-        });
-        return observe;
+        let body = new HttpParams();
+        body = body.set('name', song.name);
+        body = body.set('number', song.number.toString());
+        body = body.set('date', song.date);
+        body = body.set('theme', song.theme);
+        body = body.set('name2', song.name2);
+        body = body.set('key', song.key);
+        return this.http.put<ListItem>(this.url + this.songsUrl + song._id, body, httpOptions).pipe(
+            catchError(() => {
+                this.log('offline');
+                return of(null);
+            })
+        );
     }
 
     deleteSong(id: string): Observable<{}> {
-        let observe: Observable<{}> = new Observable<{}>();
-        this.online$.subscribe(online => {
-            if (online) {
-                observe = this.http.delete(this.url + this.songsUrl + id, httpOptions);
-                this.offline.deleteSong(id);
-            } else {
-                this.log('no can do, offline');
-            }
-        });
-        return observe;
+        return this.http.delete(this.url + this.songsUrl + id, httpOptions).pipe(
+            catchError(() => {
+                this.log('offline');
+                return of(null);
+            })
+        );
     }
 
     // themes
 
     getThemes(): Observable<Theme[]> {
-        let observe: Observable<Theme[]> = new Observable<Theme[]>();
-        this.online$.subscribe(online => {
-            if (online) {
-                observe = this.http.get<Theme[]>(this.url + this.themeUrl, httpOptions).pipe(
-                    tap(d => {this.offline.setThemes(d); })
-                );
-            } else if (localStorage.getItem('offlineMode')) {
-                observe = this.offline.getThemes();
-            }
-        });
-        return observe;
+        return this.http.get<Theme[]>(this.url + this.themeUrl, httpOptions).pipe(
+            tap(d => {this.offline.setThemes(d); }),
+            catchError(() => {
+                if (localStorage.getItem(this.offlineString)) {
+                    return this.offline.getThemes();
+                } else {
+                    this.log('offline, no stored data');
+                    return of(null);
+                }
+            })
+        );
     }
 
     getTheme(id: string): Observable<Theme> {
-        let observe: Observable<Theme> = new Observable<Theme>();
-        this.online$.subscribe(online => {
-            if (online) {
-                observe = this.http.get<Theme>(this.url + this.themeUrl + id, httpOptions).pipe(
-                    tap(d => {this.offline.setTheme(id, d); })
-                );
-            } else if (localStorage.getItem('offlineMode')) {
-                observe = this.offline.getTheme(id);
-            }
-        });
-        return observe;
+        return this.http.get<Theme>(this.url + this.themeUrl + id, httpOptions).pipe(
+            catchError(() => {
+                if (localStorage.getItem(this.offlineString)) {
+                    return this.offline.getTheme(id);
+                } else {
+                    this.log('offline, no stored data');
+                    return of(null);
+                }
+            })
+        );
     }
 
     addTheme(theme: Theme): Observable<Theme> {
-        let observe: Observable<Theme> = new Observable<Theme>();
-        this.online$.subscribe(online => {
-            if (online) {
-                let body = new HttpParams();
-                body = body.set('name', theme.name);
-                observe = this.http.post<Theme>(this.url + this.themeUrl, body, httpOptions).pipe(
-                    tap(d => {this.offline.setTheme(theme._id, d); })
-                );
-            } else if (localStorage.getItem('offlineMode')) {
-                observe = this.offline.getTheme(theme._id);
-            }
-        });
-        return observe;
+        let body = new HttpParams();
+        body = body.set('name', theme.name);
+        return this.http.post<Theme>(this.url + this.themeUrl, body, httpOptions).pipe(
+            catchError(() => {
+                this.log('offline');
+                return of(null);
+            })
+        );
     }
 
     editTheme(theme: Theme): Observable<Theme> {
-        let observe: Observable<Theme> = new Observable<Theme>();
-        this.online$.subscribe(online => {
-            if (online) {
-                let body = new HttpParams();
-                body = body.set('name', theme.name);
-                observe = this.http.put<Theme>(this.url + this.themeUrl + theme._id, body, httpOptions).pipe(
-                    tap(d => {this.offline.setTheme(theme._id, d); })
-                );
-            } else if (localStorage.getItem('offlineMode')) {
-                this.log('no can do, offline');
-            }
-        });
-        return observe;
+        let body = new HttpParams();
+        body = body.set('name', theme.name);
+        return this.http.put<Theme>(this.url + this.themeUrl + theme._id, body, httpOptions).pipe(
+            catchError(() => {
+                this.log('offline');
+                return of(null);
+            })
+        );
     }
 
     deleteTheme(id: string): Observable<{}> {
-        let observe: Observable<{}> = new Observable<{}>();
-        this.online$.subscribe(online => {
-            if (online) {
-                observe = this.http.delete(this.url + this.themeUrl + id, httpOptions);
-                this.offline.deleteTheme(id);
-            } else {
-                this.log('no can do, offline');
-            }
-        });
-        return observe;
+        return this.http.delete(this.url + this.themeUrl + id, httpOptions).pipe(
+            catchError(() => {
+                this.log('offline');
+                return of(null);
+            })
+        );
     }
 
     // lyrics
 
-    // getLyrics(): Observable<Lyrics[]> {
-    //     let observe: Observable<Lyrics[]> = new Observable<Lyrics[]>();
-    //     this.online$.subscribe(online => {
-    //         if (online) {
-    //             observe = this.http.get<Lyrics[]>(this.url + this.lyricsUrl, httpOptions).pipe(
-    //                 tap(d => {this.offline.setLyrics(d); })
-    //             );
-    //         } else if (localStorage.getItem('offlineMode')) {
-    //             observe = this.offline.getLyrics();
-    //         }
-    //     });
-    //     return observe;
-    // }
+    getLyrics(): Observable<Lyrics[]> {
+        return this.http.get<Lyrics[]>(this.url + this.lyricsUrl, httpOptions).pipe(
+            tap(d => {this.offline.setLyrics(d); }),
+            catchError(() => {
+                if (localStorage.getItem(this.offlineString)) {
+                    return this.offline.getLyrics();
+                } else {
+                    this.log('offline, no stored data');
+                    return of(null);
+                }
+            })
+        );
+    }
 
     getLyric(id: string): Observable<Lyrics> {
-        let observe: Observable<Lyrics> = new Observable<Lyrics>();
-        this.online$.subscribe(online => {
-            if (online) {
-                observe = this.http.get<Lyrics>(this.url + this.lyricsUrl + id, httpOptions).pipe(
-                    tap(d => {this.offline.setLyric(id, d); })
-                );
-            } else if (localStorage.getItem('offlineMode')) {
-                observe = this.offline.getLyric(id);
-            }
-        });
-        return observe;
+        return this.http.get<Lyrics>(this.url + this.lyricsUrl + id, httpOptions).pipe(
+            catchError(() => {
+                if (localStorage.getItem(this.offlineString)) {
+                    return this.offline.getLyric(id);
+                } else {
+                    this.log('offline, no stored data');
+                    return of(null);
+                }
+            })
+        );
     }
 
     addLyrics(lyrics: Lyrics): Observable<Lyrics> {
-        let observe: Observable<Lyrics> = new Observable<Lyrics>();
-        this.online$.subscribe(online => {
-            if (online) {
-                let body = new HttpParams();
-                body = body.set('songId', lyrics.songId);
-                body = body.set('lyrics', lyrics.lyrics);
-                observe = this.http.post<Lyrics>(this.url + this.lyricsUrl, body, httpOptions).pipe(
-                    tap(d => {this.offline.setLyric(lyrics.songId, d); })
-                );
-            } else if (localStorage.getItem('offlineMode')) {
-                observe = this.offline.getLyric(lyrics.songId);
-            }
-        });
-        return observe;
+        let body = new HttpParams();
+        body = body.set('songId', lyrics.songId);
+        body = body.set('lyrics', lyrics.lyrics);
+        return this.http.post<Lyrics>(this.url + this.lyricsUrl, body, httpOptions).pipe(
+            catchError(() => {
+                this.log('offline');
+                return of(null);
+            })
+        );
     }
 
     editLyrics(lyrics: Lyrics): Observable<Lyrics> {
-        let observe: Observable<Lyrics> = new Observable<Lyrics>();
-        this.online$.subscribe(online => {
-            if (online) {
-                let body = new HttpParams();
-                body = body.set('songId', lyrics.songId);
-                body = body.set('lyrics', lyrics.lyrics);
-                observe = this.http.put<Lyrics>(this.url + this.lyricsUrl + lyrics.songId, body, httpOptions).pipe(
-                    tap(d => {this.offline.setLyric(lyrics.songId, d); })
-                );
-            } else if (localStorage.getItem('offlineMode')) {
-                this.log('no can do, offline');
-            }
-        });
-        return observe;
+        let body = new HttpParams();
+        body = body.set('songId', lyrics.songId);
+        body = body.set('lyrics', lyrics.lyrics);
+        return this.http.put<Lyrics>(this.url + this.lyricsUrl + lyrics.songId, body, httpOptions).pipe(
+            catchError(() => {
+                this.log('offline');
+                return of(null);
+            })
+        );
     }
 
     deleteLyrics(id: string): Observable<{}> {
-        let observe: Observable<{}> = new Observable<{}>();
-        this.online$.subscribe(online => {
-            if (online) {
-                observe = this.http.delete(this.url + this.lyricsUrl + id, httpOptions);
-                this.offline.deleteTheme(id);
-            } else {
-                this.log('no can do, offline');
-            }
-        });
-        return observe;
+        return this.http.delete(this.url + this.lyricsUrl + id, httpOptions).pipe(
+            catchError(() => {
+                this.log('offline');
+                return of(null);
+            })
+        );
     }
 
-    storeDataToLocal() {
-        this.getThemes().subscribe();
-        this.getSongs().subscribe(songs => {
-            for (let s of songs) {
-                this.getSong(s._id).subscribe();
-                this.getLyric(s._id).subscribe();
-            }
-        });
+    storeDataToLocal(callback: (size) => void = null) {
+        let count = 0;
+        this.getThemes().subscribe(null, null, () => {count++; if (count === 3 && callback) {callback(this.getCapacityString()); }});
+        this.getSongs().subscribe(null, null, () => {count++; if (count === 3 && callback) {callback(this.getCapacityString()); }});
+        this.getLyrics().subscribe(null, null, () => {count++; if (count === 3 && callback) {callback(this.getCapacityString()); }});
     }
 
-    clearLocalStorage() {
+    clearLocalStorage(andLoad = true) {
         const a = localStorage.getItem('logged');
         localStorage.clear();
         if (a) {
             localStorage.setItem('logged', 'true');
         }
+        if (andLoad) {
+            localStorage.setItem(this.offlineString, 'true');
+            this.storeDataToLocal();
+        }
     }
 
+    getCapacityString() {
+        return this.offline.getCapacityString();
+    }
 
 }

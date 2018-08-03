@@ -54,9 +54,9 @@ const dynamicStyles = [ s1 ];
 })
 export class AdminComponent implements OnInit {
 
-    online$: Observable<boolean>;
+    // online$: Observable<boolean>;
     offlineMode = 'Off';
-    capacity = 0;
+    capacity = '';
 
     edit = true;
     add = false;
@@ -73,7 +73,7 @@ export class AdminComponent implements OnInit {
         private route: Router,
         private songService: SongsService
     ) {
-        this.online$ = songService.online$;
+        // this.online$ = songService.online$;
     }
 
     ngOnInit() {
@@ -83,7 +83,7 @@ export class AdminComponent implements OnInit {
         if (localStorage.getItem('offlineMode')) {
             this.offlineMode = 'On';
         }
-        this.capacity = localStorage.length;
+        this.capacity = this.songService.getCapacityString();
         this.loadStyle();
     }
 
@@ -94,14 +94,16 @@ export class AdminComponent implements OnInit {
     }
 
     toggleOffline() {
+
         if (localStorage.getItem('offlineMode')) {
-            localStorage.removeItem('offlineMode');
+            // localStorage.removeItem('offlineMode');
             this.offlineMode = 'Off';
-            this.songService.clearLocalStorage();
+            this.songService.clearLocalStorage(false);
+            this.capacity = '0B';
         } else {
             localStorage.setItem('offlineMode', 'true');
             this.offlineMode = 'On';
-            this.songService.storeDataToLocal();
+            this.songService.storeDataToLocal(size => this.capacity = size);
         }
     }
 

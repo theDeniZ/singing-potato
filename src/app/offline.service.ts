@@ -30,7 +30,10 @@ export class OfflineService {
     // songs
 
     getSongs(): Observable<ListItem[]> {
-        return of(JSON.parse(localStorage.getItem(this.songsKey)));
+        let e;
+        if (e = localStorage.getItem(this.songsKey)) {
+            return of(JSON.parse(e));
+        }
     }
 
     setSongs(songs: ListItem[]) {
@@ -38,16 +41,21 @@ export class OfflineService {
     }
 
     getSong(id) {
-        return of(JSON.parse(localStorage.getItem(this.songKey + id)));
+        const songs = JSON.parse(localStorage.getItem(this.songsKey));
+        for (const s of songs) {
+            if (s._id === id) {
+                return of(s);
+            }
+        }
     }
 
-    setSong(id, s) {
-        localStorage.setItem(this.songKey + id, JSON.stringify(s));
-    }
-
-    deleteSong(id) {
-        localStorage.removeItem(this.songKey + id);
-    }
+    // setSong(id, s) {
+    //     localStorage.setItem(this.songKey + id, JSON.stringify(s));
+    // }
+    //
+    // deleteSong(id) {
+    //     localStorage.removeItem(this.songKey + id);
+    // }
 
     // themes
 
@@ -60,16 +68,21 @@ export class OfflineService {
     }
 
     getTheme(id) {
-        return of(JSON.parse(localStorage.getItem(this.themeKey + id)));
+        const themes = JSON.parse(localStorage.getItem(this.themesKey));
+        for (const theme of themes) {
+            if (theme._id === id) {
+                return of(theme);
+            }
+        }
     }
 
-    setTheme(id, t) {
-        localStorage.setItem(this.themeKey + id, JSON.stringify(t));
-    }
-
-    deleteTheme(id) {
-        localStorage.removeItem(this.themeKey + id);
-    }
+    // setTheme(id, t) {
+    //     localStorage.setItem(this.themeKey + id, JSON.stringify(t));
+    // }
+    //
+    // deleteTheme(id) {
+    //     localStorage.removeItem(this.themeKey + id);
+    // }
 
     // lyrics
 
@@ -82,14 +95,32 @@ export class OfflineService {
     }
 
     getLyric(id) {
-        return of(JSON.parse(localStorage.getItem(this.lyricKey + id)));
+        const lyr = JSON.parse(localStorage.getItem(this.lyricsKey));
+        for (const l of lyr) {
+            if (l.songId === id) {
+                return of(l);
+            }
+        }
     }
 
-    setLyric(id, t) {
-        localStorage.setItem(this.lyricKey + id, JSON.stringify(t));
-    }
+    // setLyric(id, t) {
+    //     localStorage.setItem(this.lyricKey + id, JSON.stringify(t));
+    // }
+    //
+    // deleteLyric(id) {
+    //     localStorage.removeItem(this.lyricKey + id);
+    // }
 
-    deleteLyric(id) {
-        localStorage.removeItem(this.lyricKey + id);
+    getCapacityString() {
+        // return '';
+        if (localStorage.getItem(this.songsKey) && localStorage.getItem(this.themesKey) && localStorage.getItem(this.lyricsKey)) {
+            console.log('getting');
+            const l = localStorage.getItem(this.songsKey).length +
+                localStorage.getItem(this.themesKey).length +
+                localStorage.getItem(this.lyricsKey).length;
+            return (l / 1024).toFixed(0).toString() + 'KB';
+        } else {
+            return '0B';
+        }
     }
 }

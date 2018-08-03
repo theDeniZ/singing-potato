@@ -2,7 +2,6 @@
     <!--here-->
 
     <div class="background"></div>
-    <p>Online: {{online$ | async}}</p>
     <div class="header" [ngClass]="theme ? 'non-fixed' : '' ">
         <button routerLink="/" class="addButton">Back</button>
         <button (click)="add = true; edit = false;  theme = false;" class="addButton">Add</button>
@@ -12,7 +11,9 @@
         <input #search type="text" placeholder="Search" class="search" (keyup)="doSearch(search.value)">
     </div>
     <div class="space"></div>
-    <button (click)="toggleOffline()">Offline {{offlineMode}}</button>Capacity: {{capacity}}
+    <div class="offline">
+        <button (click)="toggleOffline()" class="addButton offline-button">Offline {{offlineMode}}({{capacity}})</button>
+    </div>
     <div *ngIf="add" class="half content">
         <input type="number" #number id="number" placeholder="Number">
 
