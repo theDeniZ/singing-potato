@@ -23,6 +23,39 @@
 </div>
 <div class="half content right" [froalaView]="lyr"></div>
 
-<link href="/assets/css/admin.css" rel="stylesheet" />
+<!--<link href="/assets/css/admin.css" rel="stylesheet" />-->
 <!--<link href="node_modules/froala-editor/css/froala_editor.pkgd.min.css" rel="stylesheet">-->
 <!--<link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">-->
+<style>
+    @media screen and (min-width: 900px) {
+        input[type=text], select, input[type=number], input[type=date] {
+            padding: 12px 20px;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        textarea {
+            font-size: 16px;
+        }
+        .triple {
+            font-size: 17px;
+        }
+        .space {
+            height: 8vw;
+        }
+        .half {
+            width: 50%;
+            left: 25%;
+            margin-top: 8vw;
+        }
+        .left {
+            position: absolute;
+            width: 40%;
+            left: 5%;
+        }
+        .right {
+            position: absolute;
+            width: 40%;
+            left: 50%;
+        }
+    }
+</style>

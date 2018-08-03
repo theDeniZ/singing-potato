@@ -7,7 +7,7 @@ import {switchMap} from 'rxjs/internal/operators';
 @Component({
     selector: 'app-admin-lyrics',
     templateUrl: './admin-lyrics.component.html',
-    styleUrls: ['./admin-lyrics.component.css']
+    styleUrls: ['./admin-lyrics.component.css', '../admin/admin.component.css']
 })
 export class AdminLyricsComponent implements OnInit {
 
