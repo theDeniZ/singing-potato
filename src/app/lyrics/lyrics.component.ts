@@ -11,9 +11,9 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 })
 export class LyricsComponent implements OnInit {
 
-    song: ListItem = null;
-    lyrics: Lyrics = null;
-    theme: Theme;
+    song: ListItem = new ListItem();
+    lyrics: Lyrics = new Lyrics();
+    theme: Theme = new Theme('');
 
     lyr = '';
 
@@ -40,7 +40,7 @@ export class LyricsComponent implements OnInit {
     }
 
     getTime() {
-        return this.song.date.replace('T', ' ').replace('Z', '').substring(0, 19);
+        return this.song.date ? this.song.date.replace('T', ' ').replace('Z', '').substring(0, 19) : null;
     }
 
 }

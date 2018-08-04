@@ -2,6 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 
 
+const s1 = '\n' +
+    '@media screen and (min-width: 600px) {\n' +
+    '    .tabs a {\n' +
+    '        font-size: 16px !important;\n' +
+    '        padding:10px 25px !important;\n' +
+    '    }\n' +
+    '}\n';
 
 const tabsJS = 'var tabs = $(\'.tabs\');\n' +
     'var items = $(\'.tabs\').find(\'a\').length;\n' +
@@ -27,6 +34,7 @@ const tabsJS = 'var tabs = $(\'.tabs\');\n' +
     '$(\'.active\').trigger(\'click\');';
 
 const dynamicScripts = [ tabsJS ];
+const dynamicStyles = [ s1 ];
 
 @Component({
     selector: 'app-root',
@@ -41,6 +49,7 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.loadScript();
+        this.loadStyle();
     }
 
     shown() {
@@ -70,6 +79,31 @@ export class AppComponent implements OnInit {
             node.id = 'tab' + i;
             node.async = false;
             node.charset = 'utf-8';
+            document.getElementsByTagName('head')[0].appendChild(node);
+        }
+
+    }
+
+
+    eraseStyle() {
+        let e;
+        for (let i = 0; i < dynamicStyles .length; i++) {
+            if (e = document.getElementById('st-' + i) ) {
+                e.remove();
+            }
+        }
+    }
+
+    loadStyle() {
+        this.eraseStyle();
+        for (let i = 0; i < dynamicStyles .length; i++) {
+            const node = document.createElement('style');
+            // node.src = 'assets/js/' + dynamicScripts [i];
+            node.innerHTML = dynamicStyles [i];
+            // node.type = 'text/javascript';
+            node.id = 'st-' + i;
+            // node.async = false;
+            // node.charset = 'utf-8';
             document.getElementsByTagName('head')[0].appendChild(node);
         }
 

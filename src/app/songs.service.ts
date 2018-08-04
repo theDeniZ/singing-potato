@@ -292,7 +292,7 @@ export class SongsService {
             }
             // this.log(t.toString());
         } else {
-            this.storeDataToLocal();
+            this.storeDataToLocal((_) => {});
         }
     }
 
