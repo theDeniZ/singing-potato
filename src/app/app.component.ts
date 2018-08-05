@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
-
+import {SongsService} from './songs.service';
+import { ProgressBarAPI } from './listItem';
 
 const s1 = '\n' +
     '@media screen and (min-width: 600px) {\n' +
@@ -8,6 +9,44 @@ const s1 = '\n' +
     '        font-size: 16px !important;\n' +
     '        padding:10px 25px !important;\n' +
     '    }\n' +
+    '    .can-toggle {\n' +
+    '        top: 15px !important;\n' +
+    '    }\n' +
+    '    .can-toggle.demo-rebrand-2 input[type="checkbox"]:checked ~ label .can-toggle__switch:after {\n' +
+    '        -webkit-transform: translate3d(39px, 0, 0) !important;\n' +
+    '        transform: translate3d(39px, 0, 0) !important;\n' +
+    '    }\n' +
+    '    .can-toggle.demo-rebrand-2 label {\n' +
+    '        font-size: 9px !important;\n' +
+    '    }\n' +
+    '    .can-toggle.demo-rebrand-2 label .can-toggle__switch {\n' +
+    '        height: 40px !important;\n' +
+    '        -webkit-flex: 0 0 80px !important;\n' +
+    '        -ms-flex: 0 0 80px !important;\n' +
+    '        flex: 0 0 80px !important;\n' +
+    '        border-radius: 40px !important;\n' +
+    '    }\n' +
+    '    .can-toggle.demo-rebrand-2 label .can-toggle__switch:before {\n' +
+    '        left: 40px !important;' +
+    '        font-size: 10px !important;\n' +
+    '        line-height: 40px !important;\n' +
+    '        width: 40px !important;\n' +
+    '        padding: 0 6px !important;\n' +
+    '    }\n' +
+    '    .can-toggle.demo-rebrand-2 label .can-toggle__switch__inactive:before {\n' +
+    '        left: 0 !important;' +
+    '    }\n' +
+    '    .can-toggle.demo-rebrand-2 label .can-toggle__switch:after {\n' +
+    '        top: 2px !important;\n' +
+    '        left: 2px !important;\n' +
+    '        border-radius: 24px !important;\n' +
+    '        width: 37px !important;\n' +
+    '        line-height: 36px !important;\n' +
+    '        font-size: 8px !important;\n' +
+    '    }' +
+    '    .floating {\n' +
+    '        right: 6vw !important;\n' +
+    '    }' +
     '}\n';
 
 const tabsJS = 'var tabs = $(\'.tabs\');\n' +
@@ -41,15 +80,54 @@ const dynamicStyles = [ s1 ];
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, ProgressBarAPI {
+
+    checked = false;
+
+    progressValue = 0;
+    progressVisibility = false;
 
     constructor(
+        private service: SongsService,
         private router: Router
-    ) {}
+    ) {
+        SongsService.progressBar = this;
+    }
 
     ngOnInit() {
         this.loadScript();
         this.loadStyle();
+        this.checked = this.service.isOfflineOn();
+    }
+
+    // progressAPI
+
+    setValue(value) {
+        setTimeout(() => this.progressValue = value, 10);
+    }
+
+    setVisibility(v) {
+        setTimeout(() => {this.handleVisibility(v); }, 10);
+    }
+
+    handleVisibility(v) {
+        if (this.progressVisibility && !v) {
+            while (this.progressValue < 100) {}
+            setTimeout(() => {this.progressVisibility = v; }, 100);
+        } else if (!this.progressVisibility && v) {
+            this.progressVisibility = v;
+        }
+    }
+
+    // handleVaue(v) {
+    //     if ( this.progressVisibility ) {
+    //         while (this.progressValue % 10 !== 0) {}
+    //         setTimeout(() => this.progressValue = v, 100);
+    //     }
+    // }
+
+    isOff() {
+        return this.service.isOfflineOn();
     }
 
     shown() {
@@ -58,6 +136,14 @@ export class AppComponent implements OnInit {
             this.loadScript();
         }
         return is;
+    }
+
+    toggleOffline() {
+        if (this.service.isOfflineOn()) {
+            this.service.clearLocalStorage();
+        } else {
+            this.service.storeDataToLocal();
+        }
     }
 
     eraseScript() {
@@ -110,4 +196,3 @@ export class AppComponent implements OnInit {
     }
 
 }
-

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import { ListItem, Theme, Lyrics } from './listItem';
+import { ListItem, Theme, Lyrics, ProgressBarAPI } from './listItem';
 import {MessageService} from './message.service';
 import {catchError, count, tap} from 'rxjs/internal/operators';
 import {OfflineService} from './offline.service';
@@ -21,6 +21,7 @@ export class SongsService {
     // static status = false;
     // static singleTon;
 
+    static progressBar: ProgressBarAPI;
     // online$: Observable<boolean>;
 
     private url = 'https://j-serv-s.herokuapp.com/';
@@ -38,7 +39,9 @@ export class SongsService {
         private messageService: MessageService,
         private offline: OfflineService
     ) {
-        this.actualize();
+        if (this.isOfflineOn() ) {
+            this.actualize();
+        }
         // if (SongsService.singleTon) {
         //     this.log('ha ha');
         //     return SongsService.singleTon;
@@ -81,7 +84,7 @@ export class SongsService {
         return this.http.get<ListItem[]>(this.url + this.songsUrl, httpOptions).pipe(
             tap(d => {this.offline.setSongs(d); }),
             catchError(() => {
-                if (localStorage.getItem(this.offlineString)) {
+                if (this.isOfflineOn()) {
                     return this.offline.getSongs();
                 } else {
                     this.log('offline, no stored data');
@@ -103,7 +106,7 @@ export class SongsService {
         }
         return this.http.get<ListItem>(this.url + this.songsUrl + id, htt).pipe(
             catchError(() => {
-                if (localStorage.getItem(this.offlineString)) {
+                if (this.isOfflineOn()) {
                     return this.offline.getSong(id);
                 } else {
                     this.log('offline, no stored data');
@@ -167,7 +170,7 @@ export class SongsService {
         return this.http.get<Theme[]>(this.url + this.themeUrl, httpOptions).pipe(
             tap(d => {this.offline.setThemes(d); }),
             catchError(() => {
-                if (localStorage.getItem(this.offlineString)) {
+                if (this.isOfflineOn()) {
                     return this.offline.getThemes();
                 } else {
                     this.log('offline, no stored data');
@@ -180,7 +183,7 @@ export class SongsService {
     getTheme(id: string): Observable<Theme> {
         return this.http.get<Theme>(this.url + this.themeUrl + id, httpOptions).pipe(
             catchError(() => {
-                if (localStorage.getItem(this.offlineString)) {
+                if (this.isOfflineOn()) {
                     return this.offline.getTheme(id);
                 } else {
                     this.log('offline, no stored data');
@@ -227,7 +230,7 @@ export class SongsService {
         return this.http.get<Lyrics[]>(this.url + this.lyricsUrl, httpOptions).pipe(
             tap(d => {this.offline.setLyrics(d); }),
             catchError(() => {
-                if (localStorage.getItem(this.offlineString)) {
+                if (this.isOfflineOn()) {
                     return this.offline.getLyrics();
                 } else {
                     this.log('offline, no stored data');
@@ -240,7 +243,7 @@ export class SongsService {
     getLyric(id: string): Observable<Lyrics> {
         return this.http.get<Lyrics>(this.url + this.lyricsUrl + id, httpOptions).pipe(
             catchError(() => {
-                if (localStorage.getItem(this.offlineString)) {
+                if (this.isOfflineOn()) {
                     return this.offline.getLyric(id);
                 } else {
                     this.log('offline, no stored data');
@@ -283,6 +286,8 @@ export class SongsService {
         );
     }
 
+    // offline
+
     actualize() {
         console.log('actualising');
         if (localStorage.getItem('date')) {
@@ -292,22 +297,31 @@ export class SongsService {
             }
             // this.log(t.toString());
         } else {
-            this.storeDataToLocal((_) => {});
+            this.storeDataToLocal();
         }
     }
 
     storeDataToLocal(callback: (size) => void = null) {
-
+        if (SongsService.progressBar) {
+            SongsService.progressBar.setVisibility(true);
+            SongsService.progressBar.setValue(0);
+        }
         let count = 0;
         const s = this;
         function complete(data) {
             if (data) {
                 count++;
+                if (SongsService.progressBar) {SongsService.progressBar.setValue(count * 30); }
             }
-            if (count === 3 && callback) {
+            if (count === 3) {
                 localStorage.setItem('date', Date.now().toString());
-                localStorage.setItem(s.offlineString, 'true');
-                callback(s.getCapacityString());
+                s.setOffline();
+                s.log('loaded');
+                if (SongsService.progressBar) {
+                    SongsService.progressBar.setValue(100);
+                    setTimeout(SongsService.progressBar.setVisibility(false), 100);
+                }
+                if (callback) {callback(s.getCapacityString()); }
             }
         }
 
@@ -317,13 +331,13 @@ export class SongsService {
         this.getLyrics().subscribe(complete);
     }
 
-    clearLocalStorage(andLoad = true) {
+    clearLocalStorage(andLoad = false) {
+        this.setOffline(false);
         localStorage.removeItem(this.offline.lyricsKey);
         localStorage.removeItem(this.offline.themesKey);
         localStorage.removeItem(this.offline.songsKey);
-        localStorage.removeItem(this.offlineString);
+        this.log('cleared');
         if (andLoad) {
-            localStorage.setItem(this.offlineString, 'true');
             this.storeDataToLocal();
         }
     }
@@ -332,4 +346,11 @@ export class SongsService {
         return this.offline.getCapacityString();
     }
 
+    isOfflineOn() {
+        return localStorage.getItem(this.offlineString) ? (localStorage.getItem(this.offlineString) === 'true') : false;
+    }
+
+    setOffline(on = true) {
+        localStorage.setItem(this.offlineString, on ? 'true' : 'false');
+    }
 }
