@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
         if (
             (name === 'mind' && pass === 'sharp') ||
             (name === '380961548922' && pass === 'wasya2101') ||
-            (name === 'sergio' && pass === 'Ohnedan')
+            (name === 'sergio' && pass === 'Ohnedan2776')
         ) {
             localStorage.setItem('logged', 'true');
             this.router.navigate(['/admin']);
