@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, enableProdMode, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {SongsService} from './songs.service';
 import { ProgressBarAPI } from './listItem';
@@ -70,7 +70,7 @@ const tabsJS = 'var tabs = $(\'.tabs\');\n' +
     '    });\n' +
     '});\n' +
     '\n' +
-    '$(\'.active\').trigger(\'click\');';
+    '$(\'.active\').trigger(\'click\');'
 
 const dynamicScripts = [ tabsJS ];
 const dynamicStyles = [ s1 ];
@@ -82,7 +82,7 @@ const dynamicStyles = [ s1 ];
 })
 export class AppComponent implements OnInit, ProgressBarAPI {
 
-    checked = false;
+    // checked = false;
 
     progressValue = 0;
     progressVisibility = false;
@@ -97,7 +97,8 @@ export class AppComponent implements OnInit, ProgressBarAPI {
     ngOnInit() {
         this.loadScript();
         this.loadStyle();
-        this.checked = this.service.isOfflineOn();
+        // this.checked = this.service.isOfflineOn();
+        this.size(this.service.getCapacityString());
     }
 
     // progressAPI
@@ -130,10 +131,23 @@ export class AppComponent implements OnInit, ProgressBarAPI {
         return this.service.isOfflineOn();
     }
 
+    size(value = '100KB') {
+        this.service.log('sized');
+        // element.dataset.checked = this.service.getCapacityString();
+        if (document.getElementById('offline-switch')) {
+            document.getElementById('offline-switch').setAttribute('data-checked', value);
+        } else {
+            setTimeout(function () {
+                document.getElementById('offline-switch').setAttribute('data-checked', value);
+            }, 1000);
+        }
+    }
+
     shown() {
         const is = !(this.router.url.includes('admin') || this.router.url.includes('login'));
         if (is) {
             this.loadScript();
+
         }
         return is;
     }
@@ -142,7 +156,8 @@ export class AppComponent implements OnInit, ProgressBarAPI {
         if (this.service.isOfflineOn()) {
             this.service.clearLocalStorage();
         } else {
-            this.service.storeDataToLocal();
+            this.service.storeDataToLocal(size => this.size(size));
+            // setTimeout(this.size(), 1000);
         }
     }
 

@@ -147,6 +147,7 @@ export class SongsService {
         body = body.set('theme', song.theme);
         body = body.set('name2', song.name2);
         body = body.set('key', song.key);
+        body = body.set('views', song.views.toString());
         return this.http.put<ListItem>(this.url + this.songsUrl + song._id, body, httpOptions).pipe(
             catchError(() => {
                 this.log('offline');

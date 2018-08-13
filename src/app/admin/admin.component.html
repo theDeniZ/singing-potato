@@ -1,5 +1,6 @@
 <div class="container">
     <!--here-->
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
     <div class="background"></div>
     <div class="header" [ngClass]="theme ? 'non-fixed' : '' ">
@@ -32,21 +33,24 @@
     <div *ngIf="edit" class="edit content">
         <div *ngFor="let song of displayedSongs" class="song-list">
             <div *ngIf="song._id">
-            <input type="text" value="#{{song.number}} [{{song._id}}]" disabled class="edit-head">
-            <input #num type="text" value="{{song.number}}">
-            <input #id type="text" value="{{song._id}}" hidden style="display: none">
-            <input #views type="number" value="{{song.views}}" hidden style="display: none">
-            <input #title type="text" value="{{song.name}}">
-            <select #theme>
-                <option *ngFor="let theme of themes" [selected]="theme._id === song.theme" value="{{theme._id}}">{{theme.name}}</option>
-            </select>
-            <input #date type="text" value="{{song.date}}">
-            <input #n2 type="text" value="{{song.name2}}" placeholder="Name 2 (search only)">
-            <input #key type="text" value="{{song.key}}" placeholder="Key">
-            <button class="add-button triple"  (click)="editSong(id.value, num.value, title.value, theme.selectedOptions.item(0).value, date.value, views.value, n2.value, key.value)">Save</button>
-                <button class="add-button triple editt" routerLink="/admin/{{song._id}}">Lyrics</button>
-            <button class="add-button triple delete"  (click)="deleteSong(id.value)">Delete</button>
+                <input type="text" value="#{{song.number}} [{{song._id}}]" disabled class="edit-head">
+                <input #num type="text" value="{{song.number}}">
+                <input #id type="text" value="{{song._id}}" hidden style="display: none">
+                <input #title type="text" value="{{song.name}}">
+                <select #theme>
+                    <option *ngFor="let theme of themes" [selected]="theme._id === song.theme" value="{{theme._id}}">{{theme.name}}</option>
+                </select>
+                <input #date type="text" value="{{song.date}}">
+                <input #views type="number" value="{{song.views}}" >
+                <input #n2 type="text" value="{{song.name2}}" placeholder="Name 2 (search only)">
+                <input #key type="text" value="{{song.key}}" placeholder="Key">
+                <button class="add-button triple"  (click)="editSong(id.value, num.value, title.value, theme.selectedOptions.item(0).value, date.value, views.value, n2.value, key.value)">Save</button>
+                    <button class="add-button triple editt" routerLink="/admin/{{song._id}}">Lyrics</button>
+                <button class="add-button triple delete"  (click)="deleteSong(id.value)">Delete</button>
             </div>
+        </div>
+        <div class="edit content">
+            <button class="addButton" (click)="setZero()">Set views to 0</button>
         </div>
     </div>
 

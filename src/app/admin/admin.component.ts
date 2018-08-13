@@ -5,6 +5,26 @@ import {ListItem, Theme} from '../listItem';
 import { fromEvent, merge, of, Observable } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
 
+const scroll = '// When the user scrolls down 20px from the top of the document, show the button\n' +
+    'window.onscroll = function() {scrollFunction()};\n' +
+    '\n' +
+    'function scrollFunction() {\n' +
+    '    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {\n' +
+    '        document.getElementById("myBtn").style.display = "block";\n' +
+    '    } else {\n' +
+    '        document.getElementById("myBtn").style.display = "none";\n' +
+    '    }\n' +
+    '}\n' +
+    '\n' +
+    '// When the user clicks on the button, scroll to the top of the document\n' +
+    'function topFunction() {\n' +
+    '    document.body.scrollTop = 0; // For Safari\n' +
+    '    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera\n' +
+    '}' +
+    '$(function () {' +
+    '$("html, body").animate({ scrollTop: $(document).height()*200000 }, "slow");' +
+    '});';
+
 const s1 = '@media screen and (min-width: 900px) {\n' +
     '        input[type=text], select, input[type=number], input[type=date] {\n' +
     '            padding: 12px 20px !important;\n' +
@@ -46,6 +66,7 @@ const s1 = '@media screen and (min-width: 900px) {\n' +
     '    }';
 
 const dynamicStyles = [ s1 ];
+const dynamicScripts = [ scroll ];
 
 @Component({
     selector: 'app-admin',
@@ -85,6 +106,7 @@ export class AdminComponent implements OnInit {
         }
         this.capacity = this.songService.getCapacityString();
         this.loadStyle();
+        this.loadScript();
     }
 
     Guard() {
@@ -242,6 +264,12 @@ export class AdminComponent implements OnInit {
         }
     }
 
+    setZero() {
+        for ( const song of this.songs ) {
+            song.views = 0;
+        }
+    }
+
     eraseStyle() {
         let e;
         for (let i = 0; i < dynamicStyles .length; i++) {
@@ -261,6 +289,30 @@ export class AdminComponent implements OnInit {
             node.id = 'style-admin-' + i;
             // node.async = false;
             // node.charset = 'utf-8';
+            document.getElementsByTagName('head')[0].appendChild(node);
+        }
+
+    }
+
+    eraseScript() {
+        let e;
+        for (let i = 0; i < dynamicScripts .length; i++) {
+            if (e = document.getElementById('script-admin-' + i) ) {
+                e.remove();
+            }
+        }
+    }
+
+    loadScript() {
+        this.eraseScript();
+        for (let i = 0; i < dynamicScripts .length; i++) {
+            const node = document.createElement('script');
+            // node.src = 'assets/js/' + dynamicScripts [i];
+            node.innerHTML = dynamicScripts [i];
+            node.type = 'text/javascript';
+            node.id = 'script-admin-' + i;
+            node.async = false;
+            node.charset = 'utf-8';
             document.getElementsByTagName('head')[0].appendChild(node);
         }
 
