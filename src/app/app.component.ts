@@ -98,7 +98,7 @@ export class AppComponent implements OnInit, ProgressBarAPI {
         this.loadScript();
         this.loadStyle();
         // this.checked = this.service.isOfflineOn();
-        this.size(this.service.getCapacityString());
+        this.size(this.service.isOfflineOn() ? this.service.getCapacityString() : '100KB');
     }
 
     // progressAPI
