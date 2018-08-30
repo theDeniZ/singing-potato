@@ -131,7 +131,7 @@ export class AppComponent implements OnInit, ProgressBarAPI {
         return this.service.isOfflineOn();
     }
 
-    size(value = '100KB') {
+    size(value = '125KB') {
         this.service.log('sized');
         // element.dataset.checked = this.service.getCapacityString();
         if (document.getElementById('offline-switch')) {
