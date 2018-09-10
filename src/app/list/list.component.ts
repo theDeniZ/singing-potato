@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ListItem, Theme} from '../listItem';
 import {SongsService} from '../songs.service';
 import {Router} from '@angular/router';
 import { MatTableDataSource, MatSort} from '@angular/material';
+import {MediaMatcher} from '@angular/cdk/layout';
 
 
 @Component({
@@ -10,8 +11,11 @@ import { MatTableDataSource, MatSort} from '@angular/material';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.css']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnDestroy, OnInit {
 
+    private _mobileQueryListener: () => void;
+
+    mobileQuery: MediaQueryList;
     songs: ListItem[];
     themes: Theme[];
     displayedColumns: string[] = ['number', 'name', 'theme', 'key', 'views', 'date'];
@@ -24,18 +28,38 @@ export class ListComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(
+        changeDetectorRef: ChangeDetectorRef,
+        media: MediaMatcher,
         private songService: SongsService,
         private router: Router
-    ) { }
+    ) {
+        this.mobileQuery = media.matchMedia('(max-width: 600px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+    }
+
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
+    }
 
     ngOnInit() {
         this.getThemesAndSongs();
-
         // this.getSongs();
     }
 
     log(message: string) {
         this.songService.log(message);
+    }
+
+    showSearch() {
+        document.getElementById('search').style.display = '';
+        document.getElementById('search-input').focus();
+    }
+
+    blurSearch(s: HTMLInputElement) {
+        if (!s.value || s.value === '') {
+            document.getElementById('search').style.display = 'none';
+        }
     }
 
     getSongs() {
@@ -56,6 +80,7 @@ export class ListComponent implements OnInit {
                     (d: ListItem, f: string) => d.number.toString().includes(f) ||
                         d.name.toLowerCase().includes(f) || this.getTheme(d.theme).name.toLowerCase().includes(f) ||
                         d.name.toLowerCase().startsWith(f) || this.getTheme(d.theme).name.toLowerCase().startsWith(f) ||
+                        d.key.toLowerCase().startsWith(f) || d.key.toLowerCase().includes(f) ||
                         d.name2.toLowerCase().startsWith(f) || d.name2.toLowerCase().includes(f);
             }
         );

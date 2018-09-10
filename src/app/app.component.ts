@@ -72,8 +72,8 @@ const tabsJS = 'var tabs = $(\'.tabs\');\n' +
     '\n' +
     '$(\'.active\').trigger(\'click\');'
 
-const dynamicScripts = [ tabsJS ];
-const dynamicStyles = [ s1 ];
+const dynamicScripts = [];//[ tabsJS ];
+const dynamicStyles = [];//[ s1 ];
 
 @Component({
     selector: 'app-root',
@@ -98,7 +98,7 @@ export class AppComponent implements OnInit, ProgressBarAPI {
         this.loadScript();
         this.loadStyle();
         // this.checked = this.service.isOfflineOn();
-        this.size(this.service.isOfflineOn() ? this.service.getCapacityString() : '100KB');
+        // this.size(this.service.isOfflineOn() ? this.service.getCapacityString() : '100KB');
     }
 
     // progressAPI
@@ -144,10 +144,12 @@ export class AppComponent implements OnInit, ProgressBarAPI {
     }
 
     shown() {
-        const is = !(this.router.url.includes('admin') || this.router.url.includes('login'));
+        const is = !(this.router.url.includes('admin') ||
+                this.router.url.includes('login') ||
+                this.router.url.includes('song')
+        );
         if (is) {
             this.loadScript();
-
         }
         return is;
     }
