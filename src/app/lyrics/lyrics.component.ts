@@ -4,6 +4,19 @@ import {SongsService} from '../songs.service';
 import {ListItem, Lyrics, Theme} from '../listItem';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
+
+const s1 = '@media screen and (max-width: 600px) {\n' +
+    '    .center-box {\n' +
+    '        width: calc(100% - 16px) !important;\n' +
+    '    }\n' +
+    '    .marg {\n' +
+    '        display: none !important;\n' +
+    '    }\n' +
+    '}';
+
+const dynamicStyles = [ s1 ];
+
+
 @Component({
     selector: 'app-lyrics',
     templateUrl: './lyrics.component.html',
@@ -36,11 +49,31 @@ export class LyricsComponent implements OnInit {
         this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.songService.getLyric(params.get('id')))
-        ).subscribe(l => {this.lyrics = l; this.lyr = l.lyrics;} );
+        ).subscribe(l => {this.lyrics = l; this.lyr = l.lyrics; } );
+        this.loadStyle();
     }
 
-    getTime() {
-        return this.song.date ? this.song.date.replace('T', ' ').replace('Z', '').substring(0, 19) : null;
+    eraseStyle() {
+        let e;
+        for (let i = 0; i < dynamicStyles .length; i++) {
+            if (e = document.getElementById('style-lyrics-' + i) ) {
+                e.remove();
+            }
+        }
     }
 
+    loadStyle() {
+        this.eraseStyle();
+        for (let i = 0; i < dynamicStyles .length; i++) {
+            const node = document.createElement('style');
+            // node.src = 'assets/js/' + dynamicScripts [i];
+            node.innerHTML = dynamicStyles [i];
+            // node.type = 'text/javascript';
+            node.id = 'style-lyrics-' + i;
+            // node.async = false;
+            // node.charset = 'utf-8';
+            document.getElementsByTagName('head')[0].appendChild(node);
+        }
+
+    }
 }

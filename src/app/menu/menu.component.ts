@@ -23,8 +23,10 @@ export class MenuComponent implements OnDestroy {
     viewer = false;
 
     private _mobileQueryListener: () => void;
+    private _tabletQueryListener: () => void;
 
     mobileQuery: MediaQueryList;
+    tabletQuery: MediaQueryList;
     selected = 2;
 
     constructor(
@@ -35,10 +37,14 @@ export class MenuComponent implements OnDestroy {
         this.mobileQuery = media.matchMedia('(max-width: 600px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
+        this.tabletQuery = media.matchMedia('(max-width: 900px)');
+        this._tabletQueryListener = () => changeDetectorRef.detectChanges();
+        this.tabletQuery.addListener(this._tabletQueryListener);
     }
 
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
+        this.tabletQuery.removeListener(this._tabletQueryListener);
     }
 
 

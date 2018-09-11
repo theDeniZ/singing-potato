@@ -2,7 +2,7 @@
 <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
     <mat-toolbar [color]="viewer ? 'secondary' : 'primary'" class="example-toolbar">
         <mat-icon (click)="snav.toggle()">menu</mat-icon>
-        <h1 class="example-app-name" style="margin-left:20px;">a'Cor-di-On</h1>
+        <h1 class="example-app-name" style="margin-left:20px;" [style.display]="tabletQuery.matches && admin ? 'none' : ''">a'Cor-di-On</h1>
         <span class="example-fill-remaining-space"></span>
         <div *ngIf="admin">
             <span class="link-s" (click)="showAdd()" [ngClass]="selected==1 ? 'selected' : '' ">Add</span>
