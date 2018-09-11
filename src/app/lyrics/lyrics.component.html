@@ -1,47 +1,60 @@
- <div class="back"></div>
-<div id="wrapper">
-    <div id="header">
-        <div id="logo">
-            <h1><a href="#">{{song.name}}</a></h1>
-        </div>
-        <!-- end #search -->
-    </div>
-    <!-- end #header -->
-    <div id="menu">
-        <ul>
-            <li><a routerLink="/">Home</a></li>
-        </ul>
-    </div>
-    <!-- end #menu -->
-    <div id="page">
-        <div id="content">
-            <div class="post">
-                <div class="entry">
-                    <div [froalaView]="lyr"></div>
-                </div>
+<app-menu viewer="true">
+    <div class="demo-ribbon"></div>
+    <div class="container">
+        <div class="grid">
+            <div class="marg"></div>
+            <div class="center-box">
+                <h3>{{song.name}}</h3>
+                <div [froalaView]="lyr"></div>-->
             </div>
-
-            <div class="post"> </div>
         </div>
-        <!-- end #content -->
-        <!-- end #sidebar -->
-        <div style="clear: both;">&nbsp;</div>
     </div>
-    <!-- end #page -->
+</app-menu>
+
+ <!--<div class="back"></div>-->
+<!--<div id="wrapper">-->
+    <!--<div id="header">-->
+        <!--<div id="logo">-->
+            <!--<h1><a href="#">{{song.name}}</a></h1>-->
+        <!--</div>-->
+        <!--&lt;!&ndash; end #search &ndash;&gt;-->
+    <!--</div>-->
+    <!--&lt;!&ndash; end #header &ndash;&gt;-->
+    <!--<div id="menu">-->
+        <!--<ul>-->
+            <!--<li><a routerLink="/">Home</a></li>-->
+        <!--</ul>-->
+    <!--</div>-->
+    <!--&lt;!&ndash; end #menu &ndash;&gt;-->
+    <!--<div id="page">-->
+        <!--<div id="content">-->
+            <!--<div class="post">-->
+                <!--<div class="entry">-->
+                    <!--<div [froalaView]="lyr"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="post"> </div>-->
+        <!--</div>-->
+        <!--&lt;!&ndash; end #content &ndash;&gt;-->
+        <!--&lt;!&ndash; end #sidebar &ndash;&gt;-->
+        <!--<div style="clear: both;">&nbsp;</div>-->
+    <!--</div>-->
+    <!--&lt;!&ndash; end #page &ndash;&gt;-->
 
 
-</div>
-<div>
-    <footer class="entry-footer" style="padding: 15px;border-bottom: 1px solid rgba(0,0,0,.05);">
-        <div class="byline">
-            <span><time>{{getTime()}}</time></span>
-            &nbsp;•&nbsp;
-            <span><span><a  href="/profile/VeD">{{theme.name}}</a></span></span>			&nbsp;•&nbsp;
-            <span>{{song.views}} views</span>
-        </div>
-    </footer></div>
+<!--</div>-->
+<!--<div>-->
+    <!--<footer class="entry-footer" style="padding: 15px;border-bottom: 1px solid rgba(0,0,0,.05);">-->
+        <!--<div class="byline">-->
+            <!--<span><time>{{getTime()}}</time></span>-->
+            <!--&nbsp;•&nbsp;-->
+            <!--<span><span><a  href="/profile/VeD">{{theme.name}}</a></span></span>			&nbsp;•&nbsp;-->
+            <!--<span>{{song.views}} views</span>-->
+        <!--</div>-->
+    <!--</footer></div>-->
 
-<div id="footer">
-    <p>© 2018 <a routerLink="/" rel="nofollow">Concord</a></p>
-</div>
+<!--<div id="footer">-->
+    <!--<p>© 2018 <a routerLink="/" rel="nofollow">Concord</a></p>-->
+<!--</div>-->
 <!-- end #footer -->

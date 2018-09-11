@@ -1,17 +1,18 @@
+<app-menu style="z-index:20" [searchListener]="this" [admin]="this">
 <div class="container">
     <!--here-->
     <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
     <div class="background"></div>
-    <div class="header" [ngClass]="theme ? 'non-fixed' : '' ">
-        <button routerLink="/" class="addButton">Back</button>
-        <button (click)="add = true; edit = false;  theme = false;" class="addButton">Add</button>
-        <button (click)="edit = true; add = false; theme = false;" class="addButton">Edit</button>
-        <button (click)="add = false; edit = false; theme = true;" class="addButton">Themes</button>
-        <button (click)="logOut()" class="addButton logout">LogOut</button>
-        <input #search type="text" placeholder="Search" class="search" (keyup)="doSearch(search.value)">
-    </div>
-    <div class="space"></div>
+    <!--<div class="header" [ngClass]="theme ? 'non-fixed' : '' ">-->
+        <!--<button routerLink="/" class="addButton">Back</button>-->
+        <!--<button (click)="add = true; edit = false;  theme = false;" class="addButton">Add</button>-->
+        <!--<button (click)="edit = true; add = false; theme = false;" class="addButton">Edit</button>-->
+        <!--<button (click)="add = false; edit = false; theme = true;" class="addButton">Themes</button>-->
+        <!--<button (click)="logOut()" class="addButton logout">LogOut</button>-->
+        <!--<input #search type="text" placeholder="Search" class="search" (keyup)="doSearch(search.value)">-->
+    <!--</div>-->
+    <!--<div class="space"></div>-->
     <div class="offline">
         <button (click)="toggleOffline()" class="addButton offline-button">Offline {{offlineMode}}({{capacity}})</button>
     </div>
@@ -70,3 +71,4 @@
 </div>
 
 <!--<link href="/assets/css/admin.css" rel="stylesheet" />-->
+</app-menu>

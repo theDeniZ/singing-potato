@@ -1,6 +1,6 @@
 {
   "name": "singing-potato",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
@@ -29,6 +29,7 @@
     "@angular/router": "^6.0.3",
     "angular-froala-wysiwyg": "^2.8.4",
     "core-js": "^2.5.4",
+    "material-design-icons": "^3.0.1",
     "rxjs": "^6.0.0",
     "typescript": "~2.7.2",
     "zone.js": "^0.8.26"

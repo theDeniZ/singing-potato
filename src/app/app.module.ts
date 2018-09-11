@@ -14,9 +14,11 @@ import { LyricsComponent } from './lyrics/lyrics.component';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import {
     MatTableModule, MatFormFieldModule, MatInputModule, MatPaginatorModule, MatSortModule, MatProgressBarModule,
-    MatToolbarModule, MatSidenavModule, MatIconModule, MatListModule
+    MatToolbarModule, MatSidenavModule, MatListModule
 } from '@angular/material';
+import {MatIconModule} from '@angular/material/icon';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { MenuComponent } from './menu/menu.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     LoginComponent,
     MessagesComponent,
     AdminLyricsComponent,
-    LyricsComponent
+    LyricsComponent,
+    MenuComponent
   ],
   imports: [
     HttpClientModule,

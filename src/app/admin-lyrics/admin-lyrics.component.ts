@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ListItem, Lyrics} from '../listItem';
+import {ListItem, Lyrics, AdminLyrics} from '../listItem';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {SongsService} from '../songs.service';
 import {switchMap} from 'rxjs/internal/operators';
@@ -51,7 +51,7 @@ const dynamicStyles = [ s1 ];
     templateUrl: './admin-lyrics.component.html',
     styleUrls: ['./admin-lyrics.component.css', '../admin/admin.component.css']
 })
-export class AdminLyricsComponent implements OnInit {
+export class AdminLyricsComponent implements OnInit, AdminLyrics {
 
     song: ListItem = null;
     lyrics: Lyrics = null;
@@ -74,9 +74,10 @@ export class AdminLyricsComponent implements OnInit {
             switchMap((params: ParamMap) =>
                 this.songService.getLyric(params.get('id')))
         ).subscribe(l => { this.lyrics = l; this.lyr = l.lyrics; }, error2 => this.log(error2.messsage) );
+        this.loadStyle();
     }
 
-    edit() {
+    save() {
         if (this.lyr.length === 0) {
             this.delete();
             return;

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import {SongsService} from '../songs.service';
-import {ListItem, Theme} from '../listItem';
+import {ListItem, SearchProtocol, Theme, AdminUser} from '../listItem';
 import { fromEvent, merge, of, Observable } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
 
@@ -73,7 +73,7 @@ const dynamicScripts = [ scroll ];
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.css']
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, SearchProtocol, AdminUser {
 
     // online$: Observable<boolean>;
     offlineMode = 'Off';
@@ -100,19 +100,36 @@ export class AdminComponent implements OnInit {
     ngOnInit() {
         this.Guard();
         this.getThemes();
-        this.getSongs();
+        this.getSongs(() => this.loadScript());
         if (localStorage.getItem('offlineMode')) {
             this.offlineMode = 'On';
         }
         this.capacity = this.songService.getCapacityString();
         this.loadStyle();
-        this.loadScript();
     }
 
     Guard() {
         if (!localStorage.getItem('logged')) {
             this.route.navigate(['/login']);
         }
+    }
+
+    showAdd() {
+        this.edit = false;
+        this.theme = false;
+        this.add = true;
+    }
+
+    showEdit() {
+        this.add = false;
+        this.theme = false;
+        this.edit = true;
+    }
+
+    showTheme() {
+        this.add = false;
+        this.edit = false;
+        this.theme = true;
     }
 
     toggleOffline() {
@@ -125,7 +142,7 @@ export class AdminComponent implements OnInit {
         }
     }
 
-    getSongs() {
+    getSongs(completed: () => void ) {
         this.songService.getSongs().subscribe(
             s => {
                 this.songs = s.sort(
@@ -133,6 +150,7 @@ export class AdminComponent implements OnInit {
                         return a.number - b.number;
                     });
                 this.displayedSongs = this.songs;
+                completed();
         });
     }
 
@@ -140,7 +158,7 @@ export class AdminComponent implements OnInit {
         this.songService.getThemes().subscribe(t => this.themes = t, error2 => this.log(error2.message));
     }
 
-    doSearch(str: string) {
+    applyFilter(str: string) {
         str = str.toLowerCase();
         this.displayedSongs = this.songs.filter(
             (song, index, list) => {

@@ -1,97 +1,63 @@
 
+<app-menu [searchListener]="this">
+    <div style="height: 10px"></div>
 
-<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
-    <mat-toolbar color="primary" class="example-toolbar">
-        <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
-        <h1 class="example-app-name">a'Cor-di-On</h1>
-        <span class="example-fill-remaining-space"></span>
-        <span [style.display]="mobileQuery.matches ? 'none' : ''">
-            <span class="link" routerLink="/">Home</span>
-            <span class="link" routerLink="/admin">Admin</span>
-        </span>
-        <mat-form-field class="wr" id="search" style="display: none">
-            <input class="tb" matInput (keyup)="applyFilter($event.target.value)" id="search-input" (blur)="blurSearch(this)">
-        </mat-form-field>
-        <button mat-icon-button (click)="showSearch()"><mat-icon>search</mat-icon></button>
-    </mat-toolbar>
+    <div *ngIf="key.length > 0 || theme.length > 0" class="containerr" [ngClass]="key.length > 0 && theme.length > 0 ? 'tags-container': '' ">
+        <div *ngIf="theme.length > 0" [ngClass]="key.length > 0 ? '': 'centered2' "  (click)="clearFilterTheme()" class="tags" >{{getTheme(theme).name}}</div>
+        <div *ngIf="key.length > 0" [ngClass]="theme.length > 0 ? '': 'centered' " (click)="clearFilterKey()" class="tags">{{key}}</div>
+    </div>
 
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort class="tbl">
 
-    <mat-sidenav-container class="example-sidenav-container"
-                           [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
-                     [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
-            <mat-nav-list>
-                <a mat-list-item routerLink="/">Home</a>
-                <a mat-list-item routerLink="/">Link</a>
-                <a mat-list-item routerLink="/">Link</a>
-                <a mat-list-item routerLink="/admin">Admin</a>
-            </mat-nav-list>
-        </mat-sidenav>
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
 
-        <mat-sidenav-content>
+            <!-- Number Column -->
+            <ng-container matColumnDef="number">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-number"> No. </th>
+                <td mat-cell *matCellDef="let element" class="column-number"> {{element.number}} </td>
+            </ng-container>
 
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-name"> Name </th>
+                <td mat-cell *matCellDef="let element" class="column-name"> {{element.name}} </td>
+            </ng-container>
 
+            <!-- Theme Column -->
+            <ng-container matColumnDef="theme">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-theme"> Theme </th>
+                <td mat-cell *matCellDef="let element" class="column-theme" (click)="$event.stopPropagation(); filterByTheme(element.theme)"> {{getTheme(element.theme).name}} </td>
+            </ng-container>
 
-            <div *ngIf="key.length > 0 || theme.length > 0" class="containerr" [ngClass]="key.length > 0 && theme.length > 0 ? 'tags-container': '' ">
-                <div *ngIf="theme.length > 0" [ngClass]="key.length > 0 ? '': 'centered2' "  (click)="clearFilterTheme()" class="tags" >{{getTheme(theme).name}}</div>
-                <div *ngIf="key.length > 0" [ngClass]="theme.length > 0 ? '': 'centered' " (click)="clearFilterKey()" class="tags">{{key}}</div>
-            </div>
+            <!-- Key Column -->
+            <ng-container matColumnDef="key">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-key"> Key </th>
+                <td mat-cell *matCellDef="let element" class="column-key" (click)="$event.stopPropagation(); filterByKey(element.key)"> {{element.key}} </td>
+            </ng-container>
 
-            <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" matSort class="tbl">
+            <!-- Views Column -->
+            <ng-container matColumnDef="views">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header  class="hide-small"> V </th>
+                <td mat-cell *matCellDef="let element"  class="hide-small"> {{element.views}} </td>
+            </ng-container>
 
-                    <!--- Note that these columns can be defined in any order.
-                          The actual rendered columns are set as a property on the row definition" -->
+            <!-- Date Column -->
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header  class="hide-small"> Date </th>
+                <td mat-cell *matCellDef="let element"  class="hide-small"> {{element.date | date: 'dd.MM.yy'}} </td>
+            </ng-container>
 
-                    <!-- Number Column -->
-                    <ng-container matColumnDef="number">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-number"> No. </th>
-                        <td mat-cell *matCellDef="let element" class="column-number"> {{element.number}} </td>
-                    </ng-container>
-
-                    <!-- Name Column -->
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-name"> Name </th>
-                        <td mat-cell *matCellDef="let element" class="column-name"> {{element.name}} </td>
-                    </ng-container>
-
-                    <!-- Theme Column -->
-                    <ng-container matColumnDef="theme">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-theme"> Theme </th>
-                        <td mat-cell *matCellDef="let element" class="column-theme" (click)="$event.stopPropagation(); filterByTheme(element.theme)"> {{getTheme(element.theme).name}} </td>
-                    </ng-container>
-
-                    <!-- Key Column -->
-                    <ng-container matColumnDef="key">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-key"> Key </th>
-                        <td mat-cell *matCellDef="let element" class="column-key" (click)="$event.stopPropagation(); filterByKey(element.key)"> {{element.key}} </td>
-                    </ng-container>
-
-                    <!-- Views Column -->
-                    <ng-container matColumnDef="views">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header  class="hide-small"> V </th>
-                        <td mat-cell *matCellDef="let element"  class="hide-small"> {{element.views}} </td>
-                    </ng-container>
-
-                    <!-- Date Column -->
-                    <ng-container matColumnDef="date">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header  class="hide-small"> Date </th>
-                        <td mat-cell *matCellDef="let element"  class="hide-small"> {{element.date | date: 'dd.MM.yy'}} </td>
-                    </ng-container>
-
-                    <tr mat-header-row class="row" *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row class="row data" *matRowDef="let row; columns: displayedColumns;" (click)="goTo(row._id);"></tr>
+            <tr mat-header-row class="row" *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row class="row data" *matRowDef="let row; columns: displayedColumns;" (click)="goTo(row._id);"></tr>
 
 
-                </table>
+        </table>
 
-                <!--<mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>-->
-            </div>
-
-        </mat-sidenav-content>
-    </mat-sidenav-container>
-</div>
-
+        <!--<mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>-->
+    </div>
+</app-menu>
 <!--<link href="/assets/css/list.css" rel="stylesheet" />-->
 <style>
     .data:nth-child(odd) {

@@ -1,21 +1,19 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ListItem, Theme} from '../listItem';
+import {ListItem, SearchProtocol, Theme} from '../listItem';
 import {SongsService} from '../songs.service';
 import {Router} from '@angular/router';
 import { MatTableDataSource, MatSort} from '@angular/material';
-import {MediaMatcher} from '@angular/cdk/layout';
+// import {MediaMatcher} from '@angular/cdk/layout';
 
 
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html',
-    styleUrls: ['./list.component.css']
+    styleUrls: ['./list.component.css']//, '../../../node_modules/material-design-icons/iconfont/material-icons.css' ]
 })
-export class ListComponent implements OnDestroy, OnInit {
+export class ListComponent implements OnInit, SearchProtocol {
 
-    private _mobileQueryListener: () => void;
 
-    mobileQuery: MediaQueryList;
     songs: ListItem[];
     themes: Theme[];
     displayedColumns: string[] = ['number', 'name', 'theme', 'key', 'views', 'date'];
@@ -28,18 +26,10 @@ export class ListComponent implements OnDestroy, OnInit {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(
-        changeDetectorRef: ChangeDetectorRef,
-        media: MediaMatcher,
         private songService: SongsService,
         private router: Router
     ) {
-        this.mobileQuery = media.matchMedia('(max-width: 600px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
 
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit() {
@@ -51,16 +41,7 @@ export class ListComponent implements OnDestroy, OnInit {
         this.songService.log(message);
     }
 
-    showSearch() {
-        document.getElementById('search').style.display = '';
-        document.getElementById('search-input').focus();
-    }
 
-    blurSearch(s: HTMLInputElement) {
-        if (!s.value || s.value === '') {
-            document.getElementById('search').style.display = 'none';
-        }
-    }
 
     getSongs() {
         this.songService.getSongs().subscribe(
