@@ -78,12 +78,19 @@ export class AdminLyricsComponent implements OnInit, AdminLyrics {
     }
 
     save() {
-        if (this.lyr.length === 0) {
-            this.delete();
-            return;
+        if (this.lyrics) {
+            if (this.lyr.length === 0) {
+                this.delete();
+                return;
+            }
+            this.lyrics.lyrics = this.lyr;
+            this.songService.editLyrics(this.lyrics).subscribe(this.lyricsHandler, null, () => {
+                this.log('saved');
+                this.router.navigate(['/admin'])
+            });
+        } else {
+            this.add();
         }
-        this.lyrics.lyrics = this.lyr;
-        this.songService.editLyrics(this.lyrics).subscribe(this.lyricsHandler, null, () => {this.log('saved'); this.router.navigate(['/admin'])});
     }
 
     add() {
@@ -92,7 +99,10 @@ export class AdminLyricsComponent implements OnInit, AdminLyrics {
             songId: this.song._id,
             lyrics: this.lyr
         };
-        this.songService.addLyrics(this.lyrics).subscribe(this.lyricsHandler, null, () => this.log('added'));
+        this.songService.addLyrics(this.lyrics).subscribe(this.lyricsHandler, null, () => {
+            this.log('added');
+            this.router.navigate(['/admin'])
+        });
     }
 
     delete() {
