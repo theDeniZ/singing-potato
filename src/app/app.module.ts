@@ -19,6 +19,8 @@ import {
 import {MatIconModule} from '@angular/material/icon';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { MenuComponent } from './menu/menu.component';
+import { AboutComponent } from './about/about.component';
+import { ContactComponent } from './contact/contact.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { MenuComponent } from './menu/menu.component';
     MessagesComponent,
     AdminLyricsComponent,
     LyricsComponent,
-    MenuComponent
+    MenuComponent,
+    AboutComponent,
+    ContactComponent
   ],
   imports: [
     HttpClientModule,
