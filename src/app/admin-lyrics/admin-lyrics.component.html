@@ -1,11 +1,11 @@
 <app-menu [lyrics]="this">
 <div class="background"></div>
-<div class=" half content left">
+<div class=" half2 content left">
     <input type="text" value="Song #{{song.number}}. '{{song.name}}'" class="edit-head" disabled>
     <br>
     <!--<editor apiKey="612hjhs0xfdyn8wy7bo2ciiwtica388m526cr2myrsp32ty0" [initialValue]="lyr" #tex (onChange)="log(lyr)" (ngModel)="lyr" ></editor>-->
     <!--<textarea #tex (keyup)="lyr = tex.value">{{lyr}}</textarea>-->
     <div [froalaEditor] [(froalaModel)]="lyr"></div>
 </div>
-<div class="half content right" [froalaView]="lyr"></div>
+<div class="half2 content right" [froalaView]="lyr"></div>
 </app-menu>

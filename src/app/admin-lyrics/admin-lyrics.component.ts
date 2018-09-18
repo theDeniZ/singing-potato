@@ -19,7 +19,7 @@ const s1 = '@media screen and (min-width: 900px) {\n' +
     '        .space {\n' +
     '            height: 8vw !important;\n' +
     '        }\n' +
-    '        .half {\n' +
+    '        .half2 {\n' +
     '            width: 50% !important;\n' +
     '            left: 25% !important;\n' +
     '            margin-top: 8vw !important;\n' +
