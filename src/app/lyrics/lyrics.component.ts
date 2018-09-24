@@ -43,6 +43,7 @@ export class LyricsComponent implements OnInit {
         ).subscribe(s =>
             {
                 this.song = s;
+                document.title = s.name
                 this.songService.getTheme(this.song.theme).subscribe(t => this.theme = t);
             }
         );

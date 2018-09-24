@@ -34,6 +34,7 @@ export class ListComponent implements OnInit, SearchProtocol {
 
     ngOnInit() {
         this.getThemesAndSongs();
+        document.title = "Singing Potato :)"
         // this.getSongs();
     }
 
