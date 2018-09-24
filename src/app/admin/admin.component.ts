@@ -22,8 +22,8 @@ const scroll = '// When the user scrolls down 20px from the top of the document,
     '    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera\n' +
     '}' +
     'function bottomFunction() {\n' +
-    '    document.body.scrollTop = 20000; // For Safari\n' +
-    '    document.documentElement.scrollTop = 20000; // For Chrome, Firefox, IE and Opera\n' +
+    '    document.body.scrollTop = 20000000; // For Safari\n' +
+    '    document.documentElement.scrollTop = 20000000; // For Chrome, Firefox, IE and Opera\n' +
     '}' +
     '$(function () {' +
     '$("html, body").animate({ scrollTop: $(document).height()*200000 }, "slow");' +
